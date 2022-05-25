@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <link type= "text/css" href= "{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+    </head>
+    <picture>
+    <img src="{{url_for('static', filename='images/ml.png')}}" width="700" height="350" hspace="350px" alt="Декоративная картинка"/img>
+    </picture>
+    <h1>Тренируем способность выражать эмоции на английском</h1>
+    <body>
+        <div>
+            Input area:
+            <a href="{{ '/input_text' }}">Input</a>
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html>

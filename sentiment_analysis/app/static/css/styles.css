@@ -1,0 +1,42 @@
+h1 {
+	color: #000000;
+	font: 32px Tahoma, sans-serif;
+	background-color: #ffdead;
+	border-top: 10px solid #7e7e7e;
+	margin: 0;
+        text-align: center
+}
+
+h2 {
+	color: #2f4f4f;
+	font: 24px Tahoma, sans-serif;
+	background-color: #fff8dc;
+	border-top: 3px solid #7e7e7e;
+	margin: 0;
+        text-align: center
+}
+
+h3 {
+	color: #8f8f8f;
+	font: 22px Tahoma, sans-serif;
+	background-color: #fff8dc;
+	border-top: 3px solid #7e7e7e;
+	margin: 0;
+        text-align: center
+}
+
+p {
+	color: #2f4f4f;
+	font: 14px Tahoma, sans-serif;
+	border-top: 3px solid #7e7e7e;
+	margin: 0;
+        text-align: center
+}
+
+div {
+	color: #8f8f8f;
+	font: 12px Tahoma, sans-serif;
+	background-color: #f8f8f8;
+	border-top: 3px solid #7e7e7e;
+	margin: 0;
+}

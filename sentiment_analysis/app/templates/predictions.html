@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Predictions</h2>
+    <body>
+        <div>
+            Input area:
+            <a href="{{ '/input_text' }}">Input</a>
+        </div>
+        <h3>Your mood today: {{ predictions }}</h3>
+    </body>
+ {% endblock %}
