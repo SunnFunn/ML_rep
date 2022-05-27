@@ -6,7 +6,8 @@ import numpy as np
 import torch
 from app.model import classifier, vectorizer
 
-classifier.load_state_dict(torch.load('C:/Users/Алексей Третьяков/Desktop/Sentiment_analysis/app/model/model.pth'))
+#classifier.load_state_dict(torch.load('C:/Users/Алексей Третьяков/Desktop/Sentiment_analysis/app/model/model.pth'))
+classifier.load_state_dict(torch.load('./app/model/model.pth'))
 classifier.to('cpu')
 
 @app.route('/')

@@ -439,7 +439,7 @@ args = Namespace(
     dropout_p=0.1
 )
 
-vectorizer = NewsDataset.load_vectorizer_only('C:/Users/Алексей Третьяков/Desktop/Sentiment_analysis/app/model/vectorizer.json')
+vectorizer = NewsDataset.load_vectorizer_only('./app/model/vectorizer.json')
 
 classifier = NewsClassifier(embedding_size=args.embedding_size, 
                             num_embeddings=len(vectorizer.title_vocab),
