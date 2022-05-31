@@ -1,22 +1,22 @@
 from flask import render_template, flash, redirect, url_for, jsonify
 from app import app
 from app.forms import StringForm
+from config import Config
 import numpy as np
 
 import torch
 from app.model import classifier, vectorizer
 
-#classifier.load_state_dict(torch.load('C:/Users/Алексей Третьяков/Desktop/Sentiment_analysis/app/model/model.pth'))
-classifier.load_state_dict(torch.load('./app/model/model.pth'))
-classifier.to('cpu')
+classifier.load_state_dict(torch.load(Config.MODEL_LOCATION))
+classifier.to(Config.DEVICE)
 
-@app.route('/')
-def status():
-	return jsonify({'status': 'ok'})
+@app.route('/home')
+def home():
+	return render_template('home.html', title = 'Sentiment analisys')
 
 
-@app.route('/input_text', methods=['GET', 'POST'])
-def input_text():
+@app.route('/input', methods=['GET', 'POST'])
+def input_to_predict():
     form = StringForm()
     
     if form.validate_on_submit():
@@ -30,11 +30,14 @@ def input_text():
         predicted_category = vectorizer.category_vocab.lookup_index(indices.item())
         
         predictions = predicted_category
-            #'probability': np.round(probability_values.item(),2)}
-            
-        #return redirect('/input_text')
-        return render_template('predictions.html', title = 'Sentiment analisys', predictions=predictions)
-    return render_template('input_text.html', title = 'Sentiment analisys', form=form)
-
-#if __name__ == '__main__':
-#    app.run(host = MODEL_HOST, port = MODEL_PORT)
+       #'probability': np.round(probability_values.item(),2)}
+        output = {'love': 'You are in love today!',
+                  'anger': 'Do not be so angry!',
+                  'joy': 'Joyful and careless as always!',
+                  'fear': 'Calm down, everyting is going to be OK!',
+                  'surprise': 'Never know what is waiting for you!',
+                  'sadness': 'Buck up and do not worry!'}
+                  
+        return render_template('predictions.html', title = 'Sentiment analisys',
+                                predictions=predictions, output=output)
+    return render_template('input.html', title = 'Sentiment analisys', form=form)

@@ -4,25 +4,28 @@
         <title>{{ title }}</title>
         <link type= "text/css" href= "{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
     </head>
-    <picture>
-    <img src="{{url_for('static', filename='images/ml.png')}}" width="700" height="350" hspace="350px" alt="Декоративная картинка"/img>
-    </picture>
-    <h1>Тренируем способность выражать эмоции на английском</h1>
     <body>
-        <div>
-            Input area:
-            <a href="{{ '/input_text' }}">Input</a>
+        <div id="wrapper">
+            <header>
+                <img src="{{url_for('static', filename='images/ml.png')}}" width="300" height="80" alt="Декоративная картинка"/img>
+                <form name="search" action="#" method="get">
+	            <input type="text" name="q" placeholder="Search"><button type="submit">GO</button>
+                </form>
+            </header>
+            <nav>
+                <ul class="top-menu">
+                    Navigation area:
+                    <li><a href="{{ '/home' }}">Home</a></li>
+                    <li><a href="{{ '/input' }}">Input</a></li>
+                </ul>
+            </nav>          
+            <section>
+                {% block content %}{% endblock %}
+            </section>
         </div>
-        <hr>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
-    </body>
+        <footer>
+            © Alexey Tretyakov<br>
+            Credentials: Ян Пойнтер "Программируем с Pytorch"
+        </footer>
+    </body>	
 </html>

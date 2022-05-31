@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+            <h1>Попробуйте описать ваше настроение</h1>
+            
+            <form name="text" action="" method="post"  novalidate>
+               {{ form.hidden_tag() }}
+               {{ form.input_text(placeholder="Введите текс в этом поле", size=142) }}{{ form.submit(class="submit") }}
+            </form>
+ {% endblock %}
