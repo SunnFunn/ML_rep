@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Для просмотра результатов моделирования пользователей введите имя пользователя:</h2>
+    <form name="analytics" action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {{ form.username(placeholder="Enter username", size=64) }}{{ form.submit(class ="submit") }}
+    </form>
+{% endblock %}

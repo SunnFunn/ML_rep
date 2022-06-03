@@ -7,7 +7,7 @@
     <body>
         <div id="wrapper">
             <header>
-                <img src="{{url_for('static', filename='images/ml.png')}}" width="300" height="80" alt="Декоративная картинка"/img>
+                <img src="{{url_for('static', filename='images/ml.png')}}" width="350" height="100" alt="Декоративная картинка"/img>
                 <form name="search" action="#" method="get">
 	            <input type="text" name="q" placeholder="Search"><button type="submit">GO</button>
                 </form>
@@ -17,6 +17,12 @@
                     Navigation area:
                     <li><a href="{{ '/home' }}">Home</a></li>
                     <li><a href="{{ '/input' }}">Input</a></li>
+                    <li><a href="{{ '/analytics' }}">Analytics</a></li>
+                    {% if current_user.is_anonymous %}
+                    <li><a href="{{ '/login' }}">Login</a></li>
+                    {% else %}
+                    <li><a href="{{ '/logout' }}">Logout</a></li>
+                    {% endif %}
                 </ul>
             </nav>          
             <section>

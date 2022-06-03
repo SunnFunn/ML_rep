@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Войдите под своим именем или зарегистрируйтесь</h2>
+    <form name="login" action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {{ form.username(placeholder="Enter username", size=141) }}{{ form.submit(class ="submit") }}<br>
+        {{ form.remember_me() }} {{ form.remember_me.label }}
+    </form>
+    <ul>New User? <a href="{{ '/register' }}" align="left">Click to Register!</a></ul>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul style="color: red;">{{ messages[0] }}</ul>
+    {% endif %}
+    {% endwith %}
+{% endblock %}

@@ -48,6 +48,32 @@ section form[name="text"] {
 	float: left;
 }
 
+section form[name="login"] {
+	float: middle;
+        font: 14px Tahoma, sans-serif;
+	background: #f8f8f8;
+	border-top: 5px solid #7e7e7e;
+        
+}
+
+section form[name="register"] {
+        font: 16px Tahoma, sans-serif;
+	background: #f8f8f8;
+	border-top: 5px solid #7e7e7e;
+        width: 700px;
+        margin: 0 auto;
+        
+}
+
+section form[name="analytics"] {
+        font: 16px Tahoma, sans-serif;
+	background: #f8f8f8;
+	border-top: 5px solid #7e7e7e;
+        width: 530px;
+        margin: 0 auto;
+        
+}
+
 
 nav a {
 	text-decoration: none;
@@ -81,7 +107,7 @@ nav li {
 
 section {
         color: #7e7e7e;
-        background: #fff8dc;
+        background: #f8f8f8;
         margin: 0;
 }
 
@@ -91,9 +117,22 @@ section h1 {
         text-align: center;
 }
 
-section p {
-        font: 24px/24px 'Oswald', sans-serif;
+section h2 {
+        font: 30px/30px 'Oswald', sans-serif;
+        background: #f8f8f8;
         padding: 3px 100px;
+        text-align: center;
+}
+
+section p {
+        font: 20px/20px 'Oswald', sans-serif;
+        padding: 3px 100px;
+}
+
+section ul {
+        font: 14px/14px 'Oswald', sans-serif;
+	margin: 0;
+	padding: 0;
 }
 
 aside {
@@ -113,6 +152,22 @@ aside h2 {
 
 aside ul {
 	font: 16px 'Oswald', sans-serif;
+}
+
+table {
+	border: 3px solid grey;
+        width: 1000px;
+        height: auto;
+        margin: 0 auto;
+}
+
+td {
+	border-top: 1px solid grey;
+}
+
+tr[class="head"] {
+	background: #add8e6;
+        font: 20px 'Oswald', sans-serif
 }
 
 footer {
