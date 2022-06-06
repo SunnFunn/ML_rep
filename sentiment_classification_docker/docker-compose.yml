@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        hostname: rabbitmq
+        restart: always
+        ports:
+            - 5672:5672
+            - 15672:15672
+
+  flask_service:
+        build:
+            context: ./flask_service
+        restart: always
+        depends_on:
+              - rabbitmq
+              - model_service
+  model_service:
+        build:
+            context: ./model_service
+        restart: always
+        depends_on:
+              - rabbitmq

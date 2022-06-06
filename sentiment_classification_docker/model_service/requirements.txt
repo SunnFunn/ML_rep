@@ -1,5 +1,4 @@
-flask == 2.0.2
-flask-wtf == 1.0.1
 numpy == 1.22.2
+pika == 1.2.1
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch == 1.11.0+cpu

@@ -1,18 +1,14 @@
-from flask import render_template, flash, redirect, url_for, jsonify, request
+from flask import render_template, flash, redirect, url_for, jsonify, json, request
 from app import app, db
 from app.forms import InputForm, LoginForm, RegistrationForm, DataForm
 from werkzeug.urls import url_parse
 from flask_login import current_user, login_user, logout_user, login_required
 from app.tables import User, Text
+from app.Client import ModelClient
 
 from config import Config
 import numpy as np
-
-import torch
-from app.model import classifier, vectorizer
-
-classifier.load_state_dict(torch.load('./app/model/model.pth'))
-classifier.to('cpu')
+import pika
 
 @app.route('/')
 @app.route('/home')
@@ -20,38 +16,31 @@ classifier.to('cpu')
 def home():
 	return render_template('home.html', title = 'Home page')
 
-
 @app.route('/input', methods=['GET', 'POST'])
 @login_required
 def input_to_predict():
-    form = InputForm()
-    
-    if form.validate_on_submit():
-        text = form.input_text.data
-        flash('Text to classify: {}'.format(text))
-        
-        vectorized_text = \
-        torch.tensor(vectorizer.vectorize(text, vector_length=100))
-        result = classifier(vectorized_text.unsqueeze(0), apply_softmax=True)
-        probability_values, indices = result.max(dim=1)
-        predicted_category = vectorizer.category_vocab.lookup_index(indices.item())
-        
-        predictions = predicted_category
-        
-        post = Text(body=text, predictions=predictions, author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        
-        output = {'love': 'You are in love today!',
-                  'anger': 'Do not be so angry!',
-                  'joy': 'Joyful and careless as always!',
-                  'fear': 'Calm down, everyting is going to be OK!',
-                  'surprise': 'Never know what is waiting for you!',
-                  'sadness': 'Buck up and do not worry!'}
-                  
-        return render_template('predictions.html', title = 'Sentiment analisys',
-                                predictions=predictions, output=output)
-    return render_template('input.html', title = 'Sentiment analisys', form=form)
+	
+	output = {'love': 'You are in love today!',
+		          'anger': 'Do not be so angry!',
+		          'joy': 'Joyful and careless as always!',
+		          'fear': 'Calm down, everyting is going to be OK!',
+		          'surprise': 'Never know what is waiting for you!',
+		          'sadness': 'Buck up and do not worry!'}
+	
+	form = InputForm()
+	model_rpc = ModelClient()
+		
+	if form.validate_on_submit():
+		
+		sentence = form.input_text.data
+		response = model_rpc.call(sentence)
+		
+		post = Text(body = sentence, predictions=response, author=current_user)
+		db.session.add(post)
+		db.session.commit()
+		
+		return render_template('predictions.html', title = 'Sentiment analisys', predictions=response, output=output)
+	return render_template('input.html', title = 'Sentiment analisys', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
