@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <br><h2 class="text-center">Войдите под своим именем или зарегистрируйтесь</h2><br>
+  <div class="container-fluid" style="width: 32rem; height: 15rem;">
+    <form name="login" action="" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ form.username(placeholder="Enter username", size=42, style="font: 18px Tahoma, sans-serif;") }}{{ form.submit(style="background-color: #87cefa") }}
+      {{ form.remember_me() }} {{ form.remember_me.label }}
+    </form>
+  </div>
+  
+  <p>New User? <a href="{{ '/register' }}" align="left">Click to Register!</a></p>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul style="color: red;">{{ messages[0] }}</ul>
+    {% endif %}
+    {% endwith %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 align="center">Данные по пользователю {{ user }}:</h2><p align="center">(5 последних записей пользователя)</p>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+            <th scope='col'>Первые буквы фамилии</th>
+            <th scope='col'>Предложенный нейросетью перечень фамилий</th>
+            <th scope='col'>Дата записи</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for surname in surnames %}
+        <tr>
+            <td scope='row'><p>{{ surname.surname_beginning }}</p></td>
+            <td scope='row'><p>{{ surname.surnames_generated }}</p></td>
+            <td scope='row'><p>{{ surname.timestamp.date() }}</p></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}

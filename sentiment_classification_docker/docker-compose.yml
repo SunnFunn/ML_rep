@@ -9,16 +9,18 @@ services:
             - 5672:5672
             - 15672:15672
 
-  flask_service:
-        build:
-            context: ./flask_service
+  flask:
+        image: sunnfunn1970/sentiment:flask
+        command: python3 sentiment.py
         restart: always
+        ports:
+            - 80:5000
         depends_on:
               - rabbitmq
-              - model_service
-  model_service:
-        build:
-            context: ./model_service
+              - model
+  model:
+        image: sunnfunn1970/sentiment:model
+        command: python3 worker.py
         restart: always
         depends_on:
               - rabbitmq

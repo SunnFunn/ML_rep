@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <h3 class="text-center">Вот что нейросеть предлагает вам:</h3>
+        <div class="card">
+          <div class="card-body">
+            {% for surname in predicted_surnames %}
+            <h4 class="text-center text-muted">{{ surname }}<br></h4>
+            {% endfor %}
+          </div>
+        </div>     
+{% endblock %}

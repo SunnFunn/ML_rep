@@ -1,0 +1,184 @@
+body {
+	color: #8f8f8f;
+	font: 12px Tahoma, sans-serif;
+	background: #f8f8f8;
+	border-top: 5px solid #7e7e7e;
+	margin: 0;
+}
+
+input[type="text"] {
+	background-color: #f3f3f3;
+	border: 1px solid #e7e7e7;
+	height: 32px;
+	color: #b2b2b2;
+	padding: 0 10px;
+	vertical-align: top;
+}
+
+button {
+	color: #fff;
+	background-color: #29c5e6;
+	border: none;
+	height: 32px;
+	font-family: 'Oswald', sans-serif;
+}
+
+#submit {
+	color: #fff;
+	background-color: #29c5e6;
+	border: none;
+	height: 32px;
+	font-family: 'Oswald', sans-serif;
+}
+
+#wrapper {
+	max-width: 1050px;
+	margin: auto;
+}
+
+header {
+	padding: 20px 0;
+}
+
+form[name="search"] {
+	float: right;
+}
+
+section form[name="text"] {
+	float: left;
+}
+
+section form[name="login"] {
+	float: middle;
+        font: 14px Tahoma, sans-serif;
+	background: #f8f8f8;
+	border-top: 5px solid #7e7e7e;
+        
+}
+
+section form[name="register"] {
+        font: 16px Tahoma, sans-serif;
+	background: #f8f8f8;
+	border-top: 5px solid #7e7e7e;
+        width: 700px;
+        margin: 0 auto;
+        
+}
+
+section form[name="analytics"] {
+        font: 16px Tahoma, sans-serif;
+	background: #f8f8f8;
+	border-top: 5px solid #7e7e7e;
+        width: 530px;
+        margin: 0 auto;
+        
+}
+
+
+nav a {
+	text-decoration: none;
+}
+
+nav ul {
+	margin: 0;
+	padding: 0;
+}
+
+nav li {
+	list-style-position: inside;
+	font: 14px 'Oswald', sans-serif;
+	padding: 10px;
+}
+
+.top-menu li {
+	display: inline-block;
+	padding: 10px 30px;
+	margin: 0;
+}
+
+.top-menu li.active {
+	background: #29c5e6;
+	color: #fff;
+}
+
+.top-menu a {
+	color: #b2b2b2;
+}
+
+section {
+        color: #7e7e7e;
+        background: #f8f8f8;
+        margin: 0;
+}
+
+section h1 {
+        font: 52px/52px 'Oswald', sans-serif;
+        padding: 3px 100px;
+        text-align: center;
+}
+
+section h2 {
+        font: 30px/30px 'Oswald', sans-serif;
+        background: #f8f8f8;
+        padding: 3px 100px;
+        text-align: center;
+}
+
+section p {
+        font: 20px/20px 'Oswald', sans-serif;
+        padding: 3px 100px;
+}
+
+section ul {
+        font: 14px/14px 'Oswald', sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+aside {
+	float: right;
+	width: 350px;
+        background: #f8f8f8;
+        height: 300px;
+}
+
+aside h2 {
+	background: #29c5e6;
+	font: 20px 'Oswald', sans-serif;
+	color: #fff;
+        padding: 5px 0;
+        margin: 10px 0;
+}
+
+aside ul {
+	font: 16px 'Oswald', sans-serif;
+}
+
+table {
+	border: 3px solid grey;
+        width: 1000px;
+        height: auto;
+        margin: 0 auto;
+}
+
+td {
+	border-top: 1px solid grey;
+}
+
+tr[class="head"] {
+	background: #add8e6;
+        font: 20px 'Oswald', sans-serif
+}
+
+footer {
+	position : fixed;
+        height : 30px;
+        bottom : 0;
+        color: #8c8c8c;
+	font-size: 11px;
+        padding: 5px 0;
+}
+
+
+
+

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <hr>
+  <div class="container" style="width: 48rem; margin: auto;">
+            <form name="register" action="" method="post" novalidate align="left">
+               <p>{{ form.hidden_tag() }}</p>
+               <p class="fs-5">Введите любое количество первых букв фамилии:</p>
+               <p>{{ form.input_text(placeholder="Enter first letters", size=96) }}</p>
+               <p class="fs-5">Введите число 0 до 1, чем ближе к 1, тем выше фантазия нейросети:</p>
+               <p>{{ form.temperature(placeholder="Temperature", size=96) }}</p>
+               <p class="fs-5">Сколько хотите фамилий?</p>
+               <p>{{ form.samples_number(placeholder="Number of samples", size=96) }}</p>
+               <p>{{ form.submit(style="background-color: #87cefa") }}<p>
+  </div>
+  <hr>
+ {% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<hr>
+  <h2 align="center">Зарегистрируйтесь, заполнив поля</h2>
+  <div class="container" style="width: 48rem; margin: auto;">
+            <form name="register" action="" method="post" novalidate align="left">
+               <p class="fs-6">{{ form.hidden_tag() }}</p>
+               <p>{{ form.username(placeholder="Enter username", size=96) }}</p>
+               
+               <p>{{ form.city(placeholder="Your city", size=96) }}</p>
+               
+               <p>{{ form.profession(placeholder="Profession", size=96) }}</p>
+               <p>{{ form.submit(style="background-color: #87cefa") }}<p>
+  </div>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      <ul style="color: red;">{{ messages[0] }}</ul>
+  {% endif %}
+  {% endwith %}
+{% endblock %}
