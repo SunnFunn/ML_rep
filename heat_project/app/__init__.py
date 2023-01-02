@@ -22,7 +22,7 @@ tmin1 = 16.5
 tmin2 = 14.5
 
 # начальная внутренняя температура
-inputs = pd.read_csv('C:/Users/Алексей Третьяков/Desktop/ML_rep/heat_project/input/input_data.csv', encoding='cp1251')
+inputs = pd.read_csv('./input/input_data.csv', encoding='cp1251')
 t0 = inputs['tвнутр'].values[0]
 
 # ограничения на минимальный и максимальный уровень подачи тепла
