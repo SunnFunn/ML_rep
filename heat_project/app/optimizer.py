@@ -90,5 +90,4 @@ def data(outside_temperature, Q, internal_temp, heat_temp, forecast_hours):
 	cols = ['дата', 'tвнеш', 'Q_Гкал', 'tподающ', 'tвнутр']
 	data = pd.DataFrame(data_array, columns=cols)
 	base = datetime.today()
-	data.to_csv('./output/data_{}_{}_{}_{}_{}.csv'.format(base.year, base.month, base.day, base.hour+3, base.minute),
-	            encoding='cp1251', index=False)
+	data.to_csv('./output/data_{}_{}_{}_{}_{}.csv'.format(base.year, base.month, base.day, base.hour+3, base.minute), encoding='cp1251', index=False)
