@@ -1,0 +1,9 @@
+numpy == 1.22.2
+pandas == 1.2.4
+schedule == 1.1.0
+argparse == 1.4.0
+scipy == 1.9.1
+requests == 2.26.0
+bs4 == 4.9.3
+urllib3 == 1.26.6
+lxml == 4.6.3

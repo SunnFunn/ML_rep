@@ -49,10 +49,3 @@ classes_2 = 't_0'
 
 # генерация часового ряда прогнозного периода
 hours = [(datetime.today() + timedelta(hours=x)).hour for x in range(forecast_hours)]
-
-# дата остановки программы
-stop_year = 2023
-stop_month = 1
-stop_day = 1
-#stop_hour = 21
-#stop_minutes = 50

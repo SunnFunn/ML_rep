@@ -1,7 +1,6 @@
 import app
 from app import tags_1, tags_2, tags_3, ids, classes_1, classes_2
 from app import tmin1, tmin2, t0, Qmin, Qmax_heat, qV, alpha, betta, hours, forecast_hours
-from app import stop_year, stop_month, stop_day
 
 import argparse
 
@@ -9,9 +8,12 @@ import schedule
 from datetime import datetime
 
 parser = argparse.ArgumentParser(prog='Heat_optim')
+parser.add_argument('stop_year', type=int, help='год остановки программы')
+parser.add_argument('stop_month', type=int, help='месяц остановки программы')
+parser.add_argument('stop_day', type=int, help='день остановки программы')
 parser.add_argument('stop_hour', type=int, help='час остановки программы')
 parser.add_argument('stop_minutes', type=int, help='минуты остановки программы')
-#parser.add_argument('t0', type=float, help='Начальная температура воздуха внутри цеха')
+
 args = parser.parse_args()
 
 def job():
@@ -29,10 +31,10 @@ def job():
 	app.optimizer.data(outside_temperature, Q, internal_temp, heat_temp, forecast_hours)
 
 def main(stop_year, stop_month, stop_day, stop_hour, stop_minutes):
-	schedule.every(15).minutes.do(job)
+	schedule.every(15).seconds.do(job)
 	while datetime.now() < datetime(stop_year, stop_month, stop_day, stop_hour, stop_minutes):
 		schedule.run_pending()
 	
 
 if __name__ == '__main__':
-	main(stop_year, stop_month, stop_day, args.stop_hour, args.stop_minutes)
+	main(args.stop_year, args.stop_month, args.stop_day, args.stop_hour, args.stop_minutes)
