@@ -32,7 +32,7 @@ def job():
 
 def main(stop_year, stop_month, stop_day, stop_hour, stop_minutes):
 	schedule.every(15).seconds.do(job)
-	while datetime.now() < datetime(stop_year, stop_month, stop_day, stop_hour-3, stop_minutes):
+	while datetime.now() < datetime(stop_year, stop_month, stop_day, stop_hour - 3, stop_minutes):
 		schedule.run_pending()
 	
 

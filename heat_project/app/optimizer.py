@@ -15,8 +15,11 @@ for i in range(33):
 def Qbounds(outside_temperature, temps_out, Qmax_heat):
 	Qmax = np.zeros(24, dtype=float)
 	for i in range(24):
-		position = np.where(temps_out == outside_temperature[i])[0].tolist()[0]
-		Qmax[i] = Qmax_heat[position]
+		if outside_temperature[i] <= 8:
+			position = np.where(temps_out == outside_temperature[i])[0].tolist()[0]
+			Qmax[i] = Qmax_heat[position]
+		else:
+			Qmax[i] = Qmax_heat[0]
 	Qmax = Qmax.tolist()
 	
 	return Qmax
