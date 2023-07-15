@@ -9,6 +9,9 @@ import keyboard
 import os
 import psutil
 
+import base64
+import io
+
 #пишем зашоловок и оформляем страницу тематической картинкой
 #st.title("Поиск разности картинок")
 st.markdown("<h1 style='text-align: center; color: darkblue;'>Поиск разности картинок</h1>", unsafe_allow_html=True)
@@ -93,6 +96,17 @@ if save_result:
 	overlayed_images = overlayed_images(diff_image, im_2)
 	saving_result_image(overlayed_images)
 	st.success('файл сохранен')
+
+#скачиваем картинку
+#diff_image = pictures_diff(im_1, im_2)
+#overlayed_images = overlayed_images(diff_image, im_2)
+with open("output/result.jpg", "rb") as file:
+    btn = st.download_button(
+            label="Скачайте картинку",
+            data=file,
+            file_name="result.jpg",
+            mime="image/png"
+          )
 	
 exit_app = st.sidebar.button("Shut Down")
 if exit_app:
