@@ -14,7 +14,7 @@ st.title("Прогноз риска кардиологического забо�
 st.image('https://images.24ur.com/media/images/1024x576/May2017/e5b28ffeb0_61920351.jpg?v=d41d')
 
 #загружаем датафрейм базу данных о пациентах
-@st.cache
+@st.cache_data
 def load_data(data):
 	data_raw = pd.read_csv(data)
 	return data_raw
