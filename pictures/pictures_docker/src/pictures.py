@@ -9,9 +9,6 @@ import keyboard
 import os
 import psutil
 
-import base64
-import io
-
 #пишем зашоловок и оформляем страницу тематической картинкой
 #st.title("Поиск разности картинок")
 st.markdown("<h1 style='text-align: center; color: darkblue;'>Поиск разности картинок</h1>", unsafe_allow_html=True)
@@ -31,7 +28,7 @@ st.sidebar.markdown('**Для анализа разности картинок �
 for key,value in reference.items():
     st.sidebar.markdown(f'**{key}**: {value}')
 
-#@st.cache
+#@st.cache_resource
 def load_image(image_file):
 	img = Image.open(image_file)
 	return img
