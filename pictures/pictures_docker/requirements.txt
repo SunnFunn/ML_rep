@@ -1,5 +1,5 @@
-streamlit == 1.24.1;
-numpy == 1.25.1;
-psutil == 5.9.5;
-keyboard == 0.13.5;
-pillow 10.0.0.
+streamlit == 1.24.1
+numpy == 1.25.1
+psutil == 5.9.5
+keyboard == 0.13.5
+pillow 8.0.1
