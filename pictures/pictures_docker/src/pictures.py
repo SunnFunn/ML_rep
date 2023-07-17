@@ -1,8 +1,7 @@
 import numpy as np
 import streamlit as st
 
-from PIL import Image, ImageChops
-import PIL.ImageOps
+from PIL import Image, ImageChops, ImageOps
 
 import time
 import keyboard
@@ -49,7 +48,7 @@ def pictures_diff(im_1, im_2):
 	result_delta=ImageChops.difference(im_1, im_2)
 	
 	#инвертируем картинку
-	inverted_image = PIL.ImageOps.invert(result_delta)
+	inverted_image = ImageOps.invert(result_delta)
 	
 	#преобразуем картинку в числовой массив, фильтруем его, чтобы выделить разницу в красный цвет
 	#и преобразуме обратно в картинку
@@ -57,6 +56,7 @@ def pictures_diff(im_1, im_2):
 	inv_image_array[:,:,0][inv_image_array[:,:,0]<200] = 255
 	inv_image_array[:,:,1][inv_image_array[:,:,1]<200] = 0
 	inv_image_array[:,:,2][inv_image_array[:,:,2]<200] = 0
+
 	diff_image = Image.fromarray(inv_image_array, 'RGB')
 	
 	return diff_image
@@ -79,7 +79,7 @@ result = st.button('Получите сравнительную картинку
 if result:
 	
 	diff_image = pictures_diff(im_1, im_2)
-	overlayed_images = overlayed_images(diff_image, im_2)
+	overlayed_images = overlayed_images(diff_image, im_2) 
 	
 	st.image(diff_image, caption='Вот как выглядит разница между вашими картинками')
 	st.image(overlayed_images, caption='Вот как выглядит разница на фоне второй картинки')
@@ -91,6 +91,7 @@ if save_result:
 	
 	diff_image = pictures_diff(im_1, im_2)
 	overlayed_images = overlayed_images(diff_image, im_2)
+	
 	saving_result_image(overlayed_images)
 	st.success('файл сохранен')
 
