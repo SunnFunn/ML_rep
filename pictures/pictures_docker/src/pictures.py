@@ -1,7 +1,10 @@
 import numpy as np
 import streamlit as st
 
-from PIL import Image, ImageChops, ImageOps
+import PIL
+from PIL import Image
+#ImageChops, ImageOps
+from pdf2image import convert_from_path, convert_from_bytes
 
 import time
 import keyboard
@@ -27,77 +30,47 @@ st.sidebar.markdown('**Для анализа разности картинок �
 for key,value in reference.items():
     st.sidebar.markdown(f'**{key}**: {value}')
 
-#@st.cache_resource
-def load_image(image_file):
-	img = Image.open(image_file)
-	return img
+#img_file_buffer_1 = st.file_uploader("Загрузите первую картинку", type="pdf")
+#img_file_buffer_2 = st.file_uploader("Загрузите вторую картинку", type="pdf")
 
-img_file_buffer_1 = st.file_uploader("Загрузите первую картинку")
-img_file_buffer_2 = st.file_uploader("Загрузите вторую картинку")
+path1 = st.text_input('Введите путь к первой картинке')
+path2 = st.text_input('Введите путь ко второй картинке')
 
-if img_file_buffer_1 and img_file_buffer_2 is not None:
+if path1 and path2 is not None:
 	
-    im_1 = load_image(img_file_buffer_1)
-    im_2 = load_image(img_file_buffer_2)
+    #im_1 = Image.open(img_file_buffer_1)
+    #im_2 = Image.open(img_file_buffer_2)
+    im_1 = convert_from_path(path1)[2]
+    im_2 = convert_from_path(path2)[2]
 else:
 	st.write('## **Вы не загрузили одну или обе картинки!**')
 
+FILTER_THRESHOLD = int(st.number_input('Укажите порог фильтрации шума в разностной кртинке'))
+st.write('Порог фильтрации', FILTER_THRESHOLD)
+
 #функция поиска разницы в картинках
-def pictures_diff(im_1, im_2):
-	#ищем разницу между картинками
-	result_delta=ImageChops.difference(im_1, im_2)
+def pictures_comparison(im_1, im_2):
 	
-	#инвертируем картинку
-	inverted_image = ImageOps.invert(result_delta)
+	im_to_compare = np.array(im_2)
 	
-	#преобразуем картинку в числовой массив, фильтруем его, чтобы выделить разницу в красный цвет
-	#и преобразуме обратно в картинку
-	inv_image_array = np.array(inverted_image)
-	inv_image_array[:,:,0][inv_image_array[:,:,0]<200] = 255
-	inv_image_array[:,:,1][inv_image_array[:,:,1]<200] = 0
-	inv_image_array[:,:,2][inv_image_array[:,:,2]<200] = 0
-
-	diff_image = Image.fromarray(inv_image_array, 'RGB')
+	#ищем разницу между массивами и фильтруем одну из картинок по разностному массиву
+	delta = abs(np.array(im_2) - np.array(im_1))
+	im_to_compare[im_to_compare[:, :, :] <120] = im_to_compare[im_to_compare[:, :, :] <120]*2
+	im_to_compare[:,:,0][delta[:,:,0]>FILTER_THRESHOLD] = 255
+	im_to_compare[:,:,1][delta[:,:,1]>FILTER_THRESHOLD] = 0
+	im_to_compare[:,:,2][delta[:,:,2]>FILTER_THRESHOLD] = 0
 	
-	return diff_image
-
-#функция наложения разницы и второй картинки
-def overlayed_images(diff_image, im_2):
-	
-	#накладываем разницу на вторую картинку с затенением второй картинки
-	overlayed_images = Image.blend(im_2, diff_image, 0.8)
-	
-	return overlayed_images
-
-#функция сохранения наложенной картинки
-def saving_result_image(overlayed_images):
-	overlayed_images.save('output/result.jpg')
+	result_delta = Image.fromarray(im_to_compare, 'RGB')
+	result_delta.save('output/result.jpg')
+	return result_delta
 
 #делаем кнопку запуска блока расчета прогноза и под нее заводим сам расчет прогноза
 result = st.button('Получите сравнительную картинку')
 
-if result:
+if result:	
+	st.image(pictures_comparison(im_1, im_2), caption='На этой картинке красным цветом выделена разница между сравниваемыми картинками')
 	
-	diff_image = pictures_diff(im_1, im_2)
-	overlayed_images = overlayed_images(diff_image, im_2) 
-	
-	st.image(diff_image, caption='Вот как выглядит разница между вашими картинками')
-	st.image(overlayed_images, caption='Вот как выглядит разница на фоне второй картинки')
-	
-	
-#делаем кнопку сохранения картинки
-save_result = st.button('Сохраните сравнительную картинку')
-if save_result:
-	
-	diff_image = pictures_diff(im_1, im_2)
-	overlayed_images = overlayed_images(diff_image, im_2)
-	
-	saving_result_image(overlayed_images)
-	st.success('файл сохранен')
-
 #скачиваем картинку
-#diff_image = pictures_diff(im_1, im_2)
-#overlayed_images = overlayed_images(diff_image, im_2)
 with open("output/result.jpg", "rb") as file:
     btn = st.download_button(
             label="Скачайте картинку",
