@@ -2,8 +2,7 @@ import numpy as np
 import streamlit as st
 
 import PIL
-from PIL import Image
-#ImageChops, ImageOps
+from PIL import Image, ImageChops, ImageOps
 from pdf2image import convert_from_path, convert_from_bytes
 
 import time
@@ -14,7 +13,6 @@ import psutil
 #пишем зашоловок и оформляем страницу тематической картинкой
 #st.title("Поиск разности картинок")
 st.markdown("<h1 style='text-align: center; color: darkblue;'>Поиск разности картинок</h1>", unsafe_allow_html=True)
-#st.image('https://phonoteka.org/uploads/posts/2021-07/1625276238_23-phonoteka-org-p-oboi-na-rabochii-stol-chertezhi-oboi-krasi-23.png')
 
 #делаем короткую инструкцию
 reference = {'0': 'Загрузите первую картинку',
@@ -30,45 +28,50 @@ st.sidebar.markdown('**Для анализа разности картинок �
 for key,value in reference.items():
     st.sidebar.markdown(f'**{key}**: {value}')
 
-#img_file_buffer_1 = st.file_uploader("Загрузите первую картинку", type="pdf")
-#img_file_buffer_2 = st.file_uploader("Загрузите вторую картинку", type="pdf")
+img_file_buffer_1 = st.file_uploader("Загрузите первую картинку")
+img_file_buffer_2 = st.file_uploader("Загрузите вторую картинку")
 
-path1 = st.text_input('Введите путь к первой картинке')
-path2 = st.text_input('Введите путь ко второй картинке')
-
-if path1 and path2 is not None:
+if img_file_buffer_1 and img_file_buffer_2 is not None:
 	
-    #im_1 = Image.open(img_file_buffer_1)
-    #im_2 = Image.open(img_file_buffer_2)
-    im_1 = convert_from_path(path1)[2]
-    im_2 = convert_from_path(path2)[2]
+    im_1 = Image.open(img_file_buffer_1)
+    im_2 = Image.open(img_file_buffer_2)
 else:
 	st.write('## **Вы не загрузили одну или обе картинки!**')
 
-FILTER_THRESHOLD = int(st.number_input('Укажите порог фильтрации шума в разностной кртинке'))
-st.write('Порог фильтрации', FILTER_THRESHOLD)
+FILTER_THRESHOLD = st.slider('Укажите порог фильтрации шума в разностной кртинке', 0, 255, 200)
+st.write("Порог фильтрации:", FILTER_THRESHOLD)
 
 #функция поиска разницы в картинках
-def pictures_comparison(im_1, im_2):
+def get_pictures_difference(im_1, im_2):
 	
-	im_to_compare = np.array(im_2)
+	#находим разностную картинку
+	diff = ImageChops.difference(im_1, im_2)
 	
-	#ищем разницу между массивами и фильтруем одну из картинок по разностному массиву
-	delta = abs(np.array(im_2) - np.array(im_1))
-	im_to_compare[im_to_compare[:, :, :] <120] = im_to_compare[im_to_compare[:, :, :] <120]*2
-	im_to_compare[:,:,0][delta[:,:,0]>FILTER_THRESHOLD] = 255
-	im_to_compare[:,:,1][delta[:,:,1]>FILTER_THRESHOLD] = 0
-	im_to_compare[:,:,2][delta[:,:,2]>FILTER_THRESHOLD] = 0
+	#инвертируем разностную картинку
+	diff_inv = ImageOps.invert(diff)
+	#преобразуем инвертированную картинку в numpy массив
+	diff_inv_numpy = np.array(diff_inv)
 	
-	result_delta = Image.fromarray(im_to_compare, 'RGB')
-	result_delta.save('output/result.jpg')
-	return result_delta
+	#фильтруем массив, оставляя красный цвет и преобразуем массив обратно в картинку
+	diff_inv_numpy[:,:,0][diff_inv_numpy[:,:,0]<FILTER_THRESHOLD] = 255
+	diff_inv_numpy[:,:,1][diff_inv_numpy[:,:,1]<FILTER_THRESHOLD] = 0
+	diff_inv_numpy[:,:,2][diff_inv_numpy[:,:,2]<FILTER_THRESHOLD] = 0	
+	diff_red = Image.fromarray(diff_inv_numpy, 'RGB')
+	
+	#накладываем красную разностную картинку на одну из сравниваемых картинок
+	result = Image.blend(im_2, diff_red, 0.8)
+	
+	#сохраняем результат
+	result.save('output/result.jpg')
+	
+	return result
 
 #делаем кнопку запуска блока расчета прогноза и под нее заводим сам расчет прогноза
 result = st.button('Получите сравнительную картинку')
-
 if result:	
-	st.image(pictures_comparison(im_1, im_2), caption='На этой картинке красным цветом выделена разница между сравниваемыми картинками')
+	st.image(get_pictures_difference(im_1, im_2),
+	         caption='На этой картинке красным цветом выделена разница между сравниваемыми картинками'
+	         )
 	
 #скачиваем картинку
 with open("output/result.jpg", "rb") as file:
@@ -89,6 +92,3 @@ if exit_app:
     pid = os.getpid()
     p = psutil.Process(pid)
     p.terminate()
-
-#else:
-#	st.write('## **Что-то пошло не так, позвоните сисадмину!**')
