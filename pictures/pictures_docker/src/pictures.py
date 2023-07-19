@@ -49,29 +49,33 @@ def get_pictures_difference(im_1, im_2):
 	
 	#инвертируем разностную картинку
 	diff_inv = ImageOps.invert(diff)
-	#преобразуем инвертированную картинку в numpy массив
-	diff_inv_numpy = np.array(diff_inv)
 	
-	#фильтруем массив, оставляя красный цвет и преобразуем массив обратно в картинку
-	diff_inv_numpy[:,:,0][diff_inv_numpy[:,:,0]<FILTER_THRESHOLD] = 255
-	diff_inv_numpy[:,:,1][diff_inv_numpy[:,:,1]<FILTER_THRESHOLD] = 0
-	diff_inv_numpy[:,:,2][diff_inv_numpy[:,:,2]<FILTER_THRESHOLD] = 0	
-	diff_red = Image.fromarray(diff_inv_numpy, 'RGB')
-	
-	#накладываем красную разностную картинку на одну из сравниваемых картинок
-	result = Image.blend(im_2, diff_red, 0.8)
-	
-	#сохраняем результат
-	result.save('output/result.jpg')
-	
+	#перекрасим ее в монохромный красный цвет
+	red, green, blue = diff_inv.split()
+	mask_red = red.point(lambda i: i*2 if i < FILTER_THRESHOLD else i)
+	mask_green = green.point(lambda i: 0 if i < FILTER_THRESHOLD else 255)
+	mask_blue = blue.point(lambda i: 0 if i < FILTER_THRESHOLD else 255)
+	diff_inv_red = Image.merge('RGB', [mask_red, mask_green, mask_blue])
+		
+	return diff_inv_red
+
+def get_pictures_blend(diff_inv_red, im_2):
+
+	result = Image.blend(im_2, diff_inv_red, 0.8)
 	return result
 
 #делаем кнопку запуска блока расчета прогноза и под нее заводим сам расчет прогноза
 result = st.button('Получите сравнительную картинку')
-if result:	
-	st.image(get_pictures_difference(im_1, im_2),
-	         caption='На этой картинке красным цветом выделена разница между сравниваемыми картинками'
-	         )
+if result:
+	diff_inv_red = get_pictures_difference(im_1, im_2)
+	result = get_pictures_blend(diff_inv_red, im_2)
+	
+	#сохраняем результат
+	result.save('output/result.jpg')
+	
+	st.image(result,
+	caption='На этой картинке красным цветом выделена разница между сравниваемыми картинками'
+	)
 	
 #скачиваем картинку
 with open("output/result.jpg", "rb") as file:
