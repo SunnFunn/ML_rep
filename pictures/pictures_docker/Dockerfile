@@ -7,4 +7,4 @@ RUN pip install --upgrade pip
 RUN apt-get install -y poppler-utils
 RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8501
-ENTRYPOINT ["streamlit","run","./pictures.py"]
+ENTRYPOINT ["streamlit","run","./run.py"]

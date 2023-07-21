@@ -1,0 +1,13 @@
+cookie:
+  expiry_days: 0
+  key: ajkla
+  name: pictures_cookies
+credentials:
+  usernames:
+    alext:
+      email: alext2370@mail.ru
+      name: Alexey Tretyakov
+      password: $2b$12$jOA8.IrX6hVjyIC4ZVTa5uqlPqwyj9fMSd1olxvVe9aYDBvmlpcoa
+preauthorized:
+  emails:
+  - alext2370@mail.ru
