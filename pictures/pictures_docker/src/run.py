@@ -6,11 +6,6 @@ import streamlit_authenticator as stauth
 
 import yaml
 from yaml.loader import SafeLoader
-
-import time
-import keyboard
-import os
-import psutil
 	
 
 with open('config.yaml') as file:
@@ -37,8 +32,12 @@ if authentication_status:
     #формируем сбоку инструкцию работы приложения
     pictures.sidebar()
     
+    #выбираем тип файла
+    file_option = st.selectbox('Выберите тип загружаемых файлов', ('pdf', 'jpg', 'png', 'jpeg'))
+    st.write('Вы выбрали:', file_option)
+    
     #запускаем основной код сравнения картинок
-    pictures.main(FILTER_THRESHOLD)
+    pictures.main(file_option, FILTER_THRESHOLD)
     
     #создаем кнопку закрытия приложения
     pictures.exit_app()

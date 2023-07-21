@@ -8,6 +8,11 @@ from pdf2image import convert_from_path, convert_from_bytes
 import tempfile
 from pathlib import Path
 
+import time
+import keyboard
+import os
+import psutil
+
 def sidebar():
 	#делаем короткую инструкцию
 	reference = {'0': 'Загрузите первую картинку',
@@ -24,17 +29,24 @@ def sidebar():
 	for key,value in reference.items():
 		st.sidebar.markdown(f'**{key}**: {value}')
 
-def pdf_converter(pdf_file_1, pdf_file_2):
+def pdf_converter(file_1, file_2):
 	with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
 		fp = Path(tmp_file.name)
-		fp.write_bytes(pdf_file_1.getvalue())
+		fp.write_bytes(file_1.getvalue())
 		im_1 = convert_from_path(tmp_file.name)
 		
-		fp.write_bytes(pdf_file_2.getvalue())
+		fp.write_bytes(file_2.getvalue())
 		im_2 = convert_from_path(tmp_file.name)
 		
 		return im_1, im_2
 
+def img_converter(file_1, file_2):
+	im_1 = []
+	im_1.append(Image.open(file_1))
+	im_2 = []
+	im_2.append(Image.open(file_2))
+	
+	return im_1, im_2
 
 #функция поиска разницы в картинках
 def get_pictures_difference(im_1, im_2, FILTER_THRESHOLD):
@@ -81,12 +93,19 @@ def load_pictures(im_1):
 			mime="image/png"
 			)
 
-def main(FILTER_THRESHOLD):
-	pdf_file_1 = st.file_uploader("Выберите ваш первый .pdf file", type="pdf")
-	pdf_file_2 = st.file_uploader("Выберите ваш второй .pdf file", type="pdf")
+def main(file_option, FILTER_THRESHOLD):
+	if file_option == 'pdf':
+		file_1 = st.file_uploader("Выберите ваш первый файл", type="pdf")
+		file_2 = st.file_uploader("Выберите ваш второй файл", type="pdf")
+	else:
+		file_1 = st.file_uploader("Выберите ваш первый файл")
+		file_2 = st.file_uploader("Выберите ваш второй файл")
 	st.write('Загрузите картинки')
-	if pdf_file_1 and pdf_file_2 is not None:
-		im_1, im_2 = pdf_converter(pdf_file_1, pdf_file_2)
+	if file_1 and file_2 is not None:
+		if file_option == 'pdf':
+			im_1, im_2 = pdf_converter(file_1, file_2)
+		else:
+			im_1, im_2 = img_converter(file_1, file_2)
 		diff_inv_red = get_pictures_difference(im_1, im_2, FILTER_THRESHOLD)
 		result =  get_pictures_blend(diff_inv_red, im_2)
 		result_button = st.button('Посмотрите сравнительные картинки')
