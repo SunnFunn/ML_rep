@@ -94,12 +94,8 @@ def load_pictures(im_1):
 			)
 
 def main(file_option, FILTER_THRESHOLD):
-	if file_option == 'pdf':
-		file_1 = st.file_uploader("Выберите ваш первый файл", type="pdf")
-		file_2 = st.file_uploader("Выберите ваш второй файл", type="pdf")
-	else:
-		file_1 = st.file_uploader("Выберите ваш первый файл")
-		file_2 = st.file_uploader("Выберите ваш второй файл")
+	file_1 = st.file_uploader("Выберите ваш первый файл", type=file_option)
+	file_2 = st.file_uploader("Выберите ваш второй файл", type=file_option)
 	st.write('Загрузите картинки')
 	if file_1 and file_2 is not None:
 		if file_option == 'pdf':
