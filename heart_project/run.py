@@ -1,5 +1,6 @@
 import app
-from app import pictures
+from app import model, home_page
+from app import reference, image, title
 
 import streamlit as st
 import streamlit_authenticator as stauth
@@ -21,26 +22,21 @@ authenticator = stauth.Authenticate(
 
 name, authentication_status, username = authenticator.login('Login', 'main')
 
+def main():
+	app.home_page.title(title, image)
+	app.home_page.sidebar(reference)
+	app.home_page.greetings()
+	data = app.model.load_data('./app/heart.csv')
+	input_data = app.home_page.input_data(data)
+	model.inference(data, input_data)
+
 if authentication_status:
 	
 	#создаем кнопку logout
     authenticator.logout('Logout', 'sidebar', key='unique_key')
     
-    #пишем заголовок приложения на первой странице
-    st.markdown("<h1 style='text-align: center; color: darkblue;'>Поиск разности картинок</h1>", unsafe_allow_html=True)
-    
-    #формируем сбоку инструкцию работы приложения
-    pictures.sidebar()
-    
-    #выбираем тип файла
-    file_option = st.selectbox('Выберите тип загружаемых файлов', ('pdf', 'jpg', 'png', 'jpeg'))
-    st.write('Вы выбрали:', file_option)
-    
     #запускаем основной код сравнения картинок
-    pictures.main(file_option)
-    
-    #создаем кнопку закрытия приложения
-    #pictures.exit_app()
+    main()
    
 elif authentication_status is False:
     st.error('Username/password is incorrect')

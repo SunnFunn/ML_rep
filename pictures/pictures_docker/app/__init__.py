@@ -1,3 +1,2 @@
 import app.pictures
-
-FILTER_THRESHOLD = 200
+import app.model_ae
