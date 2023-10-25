@@ -1,9 +1,13 @@
 cookie:
-  expiry_days: 0
+  expiry_days: 5
   key: ajkla
   name: pictures_cookies
 credentials:
   usernames:
+    aleksey:
+      email: alext2370@outlook.com
+      name: Tretyakov Aleksey
+      password: $2b$12$9Ooi9BVkRHnkOknUWRpHa.zEEB.v7iv5g0sftXwuQk0W8P1Z8u1FS
     alext:
       email: alext2370@mail.ru
       name: Alexey Tretyakov

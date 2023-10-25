@@ -6,17 +6,11 @@ import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import Dataset, DataLoader
-
-import torchvision
-from torchvision import datasets, ops
-import torchvision.transforms as transforms
-from torchvision.transforms import ToTensor, v2
 
 nc=1
 nef = 128
 ndf=128
-num_embeddings = 336
+num_embeddings = 100
 
 class AE(nn.Module):
     def __init__(self):
@@ -71,7 +65,8 @@ class AE(nn.Module):
 
 model_encoder = AE()
 
-transform_encoder = v2.Compose([
-    v2.PILToTensor(),
-    v2.Resize((64,64)),
-    v2.ConvertImageDtype(torch.float32)])
+def transform_encoder(pic):
+	pic_resized = pic.resize((64,64))
+	img = torch.as_tensor(np.array(pic_resized, copy=True), dtype=torch.float32)
+	img = img.view(pic_resized.size[1], pic_resized.size[0]).unsqueeze(0)
+	return img

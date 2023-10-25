@@ -1,2 +1,1 @@
-import app.pictures
-import app.model_ae
+import app.pictures, app.model_ae, app.settings
