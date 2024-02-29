@@ -3,3 +3,4 @@
 *.ico
 *.pth
 *.zip
+**/.idea/
