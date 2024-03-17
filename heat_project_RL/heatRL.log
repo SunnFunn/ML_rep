@@ -1,0 +1,14 @@
+2024-03-17 11:17:25,251 INFO:p_loss: -1.7, v_loss: 0.3 results of RL model updating
+2024-03-17 11:17:25,251 INFO:{'Tвн': 17.0, 'Tнар': 3.0, '“нар_сл': 3.0, 'W': 4.0, 'Hd': 0.44, 'Cl': 0.12, 'Target': 17, 'Target_next': 17, 'Tпод': 54.1} results of modeling
+2024-03-17 11:18:05,394 INFO:p_loss: -1.2, v_loss: 1.1 results of RL model updating
+2024-03-17 11:18:05,394 INFO:{'Tвн': 11.0, 'Tнар': 3.0, '“нар_сл': 3.0, 'W': 4.0, 'Hd': 0.44, 'Cl': 0.12, 'Target': 17, 'Target_next': 17, 'Tпод': 95.0} results of modeling
+2024-03-17 12:18:06,071 INFO:p_loss: -1.2, v_loss: 1.1 results of RL model updating
+2024-03-17 12:18:06,071 INFO:{'Tвн': 14.3, 'Tнар': 4.0, '“нар_сл': 3.0, 'W': 3.0, 'Hd': 0.43, 'Cl': 0.81, 'Target': 17, 'Target_next': 17, 'Tпод': 82.5} results of modeling
+2024-03-17 13:18:06,667 INFO:p_loss: -1.2, v_loss: 1.1 results of RL model updating
+2024-03-17 13:18:06,667 INFO:{'Tвн': 16.8, 'Tнар': 4.0, '“нар_сл': 1.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.42, 'Target': 17, 'Target_next': 17, 'Tпод': 56.8} results of modeling
+2024-03-17 14:18:07,362 INFO:p_loss: -1.9, v_loss: 0.3 results of RL model updating
+2024-03-17 14:18:07,362 INFO:{'Tвн': 17.0, 'Tнар': 6.0, '“нар_сл': 3.0, 'W': 3.0, 'Hd': 0.45, 'Cl': 0.32, 'Target': 17, 'Target_next': 17, 'Tпод': 51.0} results of modeling
+2024-03-17 15:18:08,007 INFO:p_loss: -1.9, v_loss: 0.3 results of RL model updating
+2024-03-17 15:18:08,007 INFO:{'Tвн': 16.9, 'Tнар': 8.0, '“нар_сл': 3.0, 'W': 3.0, 'Hd': 0.46, 'Cl': 0.23, 'Target': 17, 'Target_next': 17, 'Tпод': 50.4} results of modeling
+2024-03-17 16:18:08,751 INFO:p_loss: -1.9, v_loss: 0.3 results of RL model updating
+2024-03-17 16:18:08,751 INFO:{'Tвн': 16.8, 'Tнар': 7.0, '“нар_сл': 3.0, 'W': 3.0, 'Hd': 0.51, 'Cl': 0.14, 'Target': 17, 'Target_next': 17, 'Tпод': 51.7} results of modeling
