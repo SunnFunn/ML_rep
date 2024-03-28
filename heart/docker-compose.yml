@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  heart:
+        image: heart:heart
+        container_name: heart
+        restart: always
+        expose:
+            - 8501
+  heart_web:
+       image: heart_web:heart_web
+       container_name: heart_web
+       restart: always
+       ports:
+          - 80:80
+       depends_on:
+          - heart
