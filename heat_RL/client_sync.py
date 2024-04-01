@@ -23,31 +23,40 @@ def run_client(host: str,
                read_count: int,
                write_address: int,
                write_input: str) -> list:
-
-    client = ModbusClient(host=host, port=port)
+    client = ModbusClient(host=host, port=port, timeout=30)
     assert client.connect()
 
     write_input_registers = client.convert_to_registers(write_input, client.DATATYPE.FLOAT32)
     client.write_registers(write_address, write_input_registers, slave=1)
 
+    time.sleep(20)
     res = client.read_holding_registers(read_address, count=read_count, slave=1)
     assert not res.isError()
-    res = [round(client.convert_from_registers(res.registers[i*2:i*2+2], client.DATATYPE.FLOAT32),1) for i in range(2)]
+    result = [round(client.convert_from_registers(res.registers[i * 2:i * 2 + 2], client.DATATYPE.FLOAT32), 1) for i in
+              range(2)]
+    print(result)
+
+    t_next = round(next_temp(result[1], result[0]) + np.random.uniform(-3, 0.5, 1)[0], 1)
+    write_input_registers = client.convert_to_registers(t_next, client.DATATYPE.FLOAT32)
+    client.write_registers(write_address, write_input_registers, slave=1)
+    print('Записали в регистр температуру через 3 часа: {}'.format(t_next))
 
     client.close()
-    return res
+    return t_next
 
 
 if __name__ == "__main__":
-    Tin = 17.0
+    Tin = 18.7
     while True:
-        result = run_client(host='127.0.0.1',
-               port=5020,
-               read_address=0,
-               read_count=4,
-               write_address=2,
-               write_input=Tin)
-        print(result)
-        if result[0] != 0:
-            Tin = next_temp(result[1], result[0])
-        time.sleep(modeling_period*60)
+        try:
+            Tin_next = run_client(host='127.0.0.1',
+                              port=5020,
+                              read_address=0,
+                              read_count=4,
+                              write_address=2,
+                              write_input=Tin)
+            Tin = Tin_next
+            time.sleep(modeling_period * 60 - 20)
+        except:
+            print('Client stopped...')
+            break

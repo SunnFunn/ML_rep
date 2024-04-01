@@ -37,7 +37,7 @@ async def start_server(context):
 async def read_and_write_registers(context):
     while True:
         #читаем регистры с внутренней температурой
-        await asyncio.sleep(10)
+        await asyncio.sleep(20)
         registers = context[1].getValues(fc_as_hex=3, address=0x02, count=2)
         byte_list = bytearray()
         for reg in registers[::-1]:
@@ -49,7 +49,7 @@ async def read_and_write_registers(context):
         byte_list = struct.pack("f", action)
         regs = [int.from_bytes(byte_list[x: x + 2], "little") for x in range(0, len(byte_list), 2)]
         context[1].setValues(fc_as_hex=16, address=0x00, values=regs[::-1])
-        await asyncio.sleep(modeling_period * 60 - 10)
+        await asyncio.sleep(modeling_period * 60 - 20)
 
 
 async def main():
@@ -61,8 +61,7 @@ async def main():
     task1.cancel()
     task2.cancel()
     print('Server stopped...')
-    print('Registers updating process stopped...')
-    print('Registers reading process stopped...')
+    print('Registers reading and updating process stopped...')
 
     try:
         await task1

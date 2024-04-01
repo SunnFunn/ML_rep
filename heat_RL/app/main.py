@@ -128,12 +128,8 @@ def job(url, temp_inside):
     experience_dataframe.to_csv('./data/experience_RL.csv', index=False)
 
     # для информации выводим в виде таблицы текущее состояние и предложенное моделью действие в этом состоянии
-    data = [state_current + [round(action, 1)] + [reward]]
-    headers = ['Tвн', 'Tнар', 'Тнар_сл', 'W', 'Hd', 'Cl', 'Target', 'Target_next', 'Tпод', 'reward']
+    data = [state_current + [round(action, 1)]]
+    headers = ['Tвн', 'Tнар', 'Тнар_сл', 'W', 'Hd', 'Cl', 'Target', 'Target_next', 'Tпод']
     print(tabulate(data, headers=headers))
 
-    # данные для логов
-    # logs = dict(Tвн=state_current[0], Tнар=state_current[1], Тнар_сл=state_current[2], W=state_current[3],
-    #            Hd=state_current[4], Cl=state_current[5], Target=state_current[6], Target_next=state_current[7],
-    #            Tпод=round(action, 1), Reward=reward)
     return action
