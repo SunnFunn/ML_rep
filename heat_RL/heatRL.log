@@ -1,35 +1,25 @@
-2024-03-26 12:59:37,954 WARNING:{'Tвн': 14.1, 'Tнар': 8.0, '“нар_сл': 9.0, 'W': 2.0, 'Hd': 0.48, 'Cl': 0.84, 'Target': 22, 'Target_next': 22, 'Tпод': 85.0, 'Reward': -7.9} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 12:59:50,411 WARNING:{'Tвн': 17.8, 'Tнар': 8.0, '“нар_сл': 9.0, 'W': 2.0, 'Hd': 0.48, 'Cl': 0.84, 'Target': 22, 'Target_next': 22, 'Tпод': 85.0, 'Reward': -4.199999999999999} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:01:21,476 WARNING:{'Tвн': 27.0, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -5.0} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:01:33,944 WARNING:{'Tвн': 26.3, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -4.300000000000001} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:01:46,490 WARNING:{'Tвн': 25.7, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -3.6999999999999993} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:01:58,945 WARNING:{'Tвн': 25.1, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -3.1000000000000014} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:02:11,489 WARNING:{'Tвн': 24.5, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -2.5} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:19:53,309 WARNING:{'Tвн': 11.3, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 85.0, 'Reward': -10.7} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:20:05,735 WARNING:{'Tвн': 15.0, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 85.0, 'Reward': -7.0} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:20:18,299 WARNING:{'Tвн': 18.5, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 85.0, 'Reward': -3.5} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:23:28,571 WARNING:{'Tвн': 26.8, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -4.800000000000001} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:23:41,039 WARNING:{'Tвн': 26.1, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -4.100000000000001} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:23:53,601 WARNING:{'Tвн': 25.5, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -3.5} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:24:06,091 WARNING:{'Tвн': 24.9, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -2.8999999999999986} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:24:18,674 WARNING:{'Tвн': 24.4, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 40.0, 'Reward': -2.3999999999999986} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:29:04,055 WARNING:{'Tвн': 10.1, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 85.0, 'Reward': -11.9} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:29:16,529 WARNING:{'Tвн': 13.9, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 85.0, 'Reward': -8.1} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:29:29,095 WARNING:{'Tвн': 17.5, 'Tнар': 8.0, '“нар_сл': 8.0, 'W': 3.0, 'Hd': 0.44, 'Cl': 0.58, 'Target': 22, 'Target_next': 22, 'Tпод': 85.0, 'Reward': -4.5} REWARD exceeded target temperature more than 2 degrees!
-2024-03-26 13:30:57,564 INFO:p_loss: 3.5, v_loss: 4.0 results of RL model updating
-2024-03-26 13:31:10,017 INFO:p_loss: 3.7, v_loss: 4.0 results of RL model updating
-2024-03-26 13:31:22,537 INFO:p_loss: 3.9, v_loss: 4.1 results of RL model updating
-2024-03-26 13:31:34,977 INFO:p_loss: 4.1, v_loss: 4.1 results of RL model updating
-2024-03-26 13:31:47,509 INFO:p_loss: 4.3, v_loss: 4.1 results of RL model updating
-2024-03-26 13:31:59,963 INFO:p_loss: 4.6, v_loss: 4.1 results of RL model updating
-2024-03-26 13:32:43,790 INFO:p_loss: 4.8, v_loss: 4.2 results of RL model updating
-2024-03-26 14:32:44,582 INFO:p_loss: 5.0, v_loss: 4.2 results of RL model updating
-2024-03-26 15:32:45,235 INFO:p_loss: 5.2, v_loss: 4.3 results of RL model updating
-2024-03-26 16:32:45,974 INFO:p_loss: 5.3, v_loss: 4.3 results of RL model updating
-2024-03-26 17:32:46,482 INFO:p_loss: 5.3, v_loss: 4.3 results of RL model updating
-2024-03-26 18:32:47,132 INFO:p_loss: 5.3, v_loss: 4.3 results of RL model updating
-2024-03-26 19:32:47,668 INFO:p_loss: 5.3, v_loss: 4.2 results of RL model updating
-2024-03-26 20:32:49,579 INFO:p_loss: 5.1, v_loss: 3.9 results of RL model updating
-2024-03-27 15:37:44,353 INFO:p_loss: 5.0, v_loss: 3.8 results of RL model updating
-2024-03-27 15:39:22,544 INFO:p_loss: 5.2, v_loss: 3.8 results of RL model updating
-2024-03-27 15:40:03,173 INFO:p_loss: 5.0, v_loss: 3.8 results of RL model updating
+2024-03-30 15:32:11,519 INFO:p_loss: 5.3, v_loss: 3.8 results of RL model updating
+2024-04-01 18:56:39,332 INFO:Server listening.
+2024-04-01 18:59:22,980 INFO:Server listening.
+2024-04-01 19:06:49,954 INFO:Server listening.
+2024-04-01 19:07:40,782 INFO:Server listening.
+2024-04-01 19:14:45,014 INFO:Server listening.
+2024-04-01 19:31:45,413 INFO:Server listening.
+2024-04-01 19:39:09,646 INFO:Server listening.
+2024-04-01 19:43:06,644 INFO:Server listening.
+2024-04-01 19:46:29,264 INFO:Server listening.
+2024-04-01 19:49:28,409 INFO:Server listening.
+2024-04-01 20:04:49,520 INFO:Server listening.
+2024-04-01 20:08:44,446 INFO:Server listening.
+2024-04-01 20:26:56,327 INFO:Server listening.
+2024-04-01 20:28:06,010 INFO:Server listening.
+2024-04-01 20:30:07,251 INFO:Server listening.
+2024-04-01 20:33:47,303 INFO:Server listening.
+2024-04-01 20:47:04,425 INFO:Server listening.
+2024-04-01 20:50:05,982 INFO:Server listening.
+2024-04-01 21:03:19,934 INFO:Server listening.
+2024-04-01 21:10:28,354 INFO:Server listening.
+2024-04-01 21:19:52,567 INFO:Server listening.
+2024-04-01 21:30:37,371 INFO:Server listening.
+2024-04-01 21:35:19,950 INFO:Server listening.
+2024-04-01 21:38:53,098 INFO:Server listening.
