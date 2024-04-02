@@ -7,6 +7,7 @@ import urllib3
 import re
 from datetime import datetime
 
+#импорт прогнозного количества часов
 from app import forecast_hours
 
 urllib3.disable_warnings()
