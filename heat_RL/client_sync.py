@@ -29,7 +29,7 @@ def run_client(host: str,
                read_address: int,
                read_count: int,
                write_address: int,
-               write_input: str) -> float:
+               write_input: float) -> float:
     #создаем клиента и открываем соединение с сервером
     client = ModbusClient(host=host, port=port, timeout=30)
     assert client.connect()
@@ -55,8 +55,7 @@ def run_client(host: str,
 
     #делаем оценочный расчет температуры, которая установится через 3 часа при условии подачи теплоносителя по
     #полученной от модели температуре
-    t_next = round(next_temp(result[-1], result[-2])# + np.random.uniform(-0.8, 0.2, 1)[0], 1)
-
+    t_next = round(next_temp(result[-1], result[-2]), 1)
 
     #пишем полученную через 3 часа температуру воздуха внутри помещения в регистры
     write_input_registers = client.convert_to_registers(t_next, client.DATATYPE.FLOAT32)
@@ -68,7 +67,7 @@ def run_client(host: str,
 
 
 if __name__ == "__main__":
-    Tin = 20.6
+    Tin = 17.5
     while True:
         try:
             Tin_next = run_client(host='127.0.0.1',

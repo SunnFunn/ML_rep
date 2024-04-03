@@ -1,17 +1,17 @@
-from flask import render_template, flash, redirect, url_for, jsonify, json, request
+from flask import render_template, flash, redirect, request, url_for
 from app import app, db
 from app.forms import InputForm, LoginForm, RegistrationForm, DataForm
-from werkzeug.urls import url_parse
 from flask_login import current_user, login_user, logout_user, login_required
 from app.tables import User, Surnames
 from app.inference import inference, decode_samples
 
-from config import Config
-import numpy as np
+import sqlalchemy as sa
+from urllib.parse import urlsplit
+
 import torch
 from app.model import classifier, vectorizer
 
-classifier.load_state_dict(torch.load('./app/model/model_surnames.pth'))
+classifier.load_state_dict(torch.load('./app/model/model_surnames_v2.pth'))
 classifier.to('cpu')
 
 @app.route('/')
@@ -48,24 +48,24 @@ def input_to_predict():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect('/home')
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = db.session.scalar(sa.select(User).where(User.username == form.username.data))
         if user is None:
             flash('Unknown username entered. Please register first!')
-            return redirect('/login')
+            return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = '/home'
+        if not next_page or urlsplit(next_page).netloc != '':
+            next_page = url_for('home')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect('/home')
+    return redirect(url_for('home'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -77,7 +77,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
-        return redirect('/login')
+        return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/analytics', methods=['GET', 'POST'])
@@ -86,10 +86,10 @@ def analytics():
 	form = DataForm()
 	if form.validate_on_submit():
 		input_username = form.username.data
-		user = User.query.filter_by(username=input_username).first()
-		if user is None:
-			return redirect('/analytics')
-		user = User.query.filter_by(username=input_username).all()
-		surnames = user[0].surnames
+		user = db.session.scalar(sa.select(User).where(User.username == input_username))
+		if user is None or user.username != current_user.username:
+			flash('Unknown username entered or data for you does not exist yet!')
+			return redirect(url_for('analytics'))
+		surnames = db.session.scalars(user.surnames.select()).all()
 		return render_template('output.html', title = 'Some analytics', surnames=surnames[-5:], user=input_username)
 	return render_template('analytics.html', title = 'Some analytics', form=form)

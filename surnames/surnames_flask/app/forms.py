@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import ValidationError, DataRequired
-from app.tables import User, Surnames
+from app.tables import User
 
 class InputForm(FlaskForm):
     input_text = StringField(validators=[DataRequired()])

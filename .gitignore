@@ -2,5 +2,6 @@
 *.bat
 *.ico
 *.pth
+*.pt
 *.zip
 **/.idea/

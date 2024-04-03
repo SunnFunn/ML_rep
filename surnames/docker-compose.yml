@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  surnames_app:
+        image: surnames_app:surnames_app
+        container_name: surnames_app
+        restart: always
+        expose:
+            - 5000
+  surnames_web:
+       image: surnames_web:surnames_web
+       container_name: surnames_web
+       restart: always
+       ports:
+          - 80:80
+       depends_on:
+          - surnames_app
