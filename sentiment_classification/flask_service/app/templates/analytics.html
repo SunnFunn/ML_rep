@@ -6,4 +6,9 @@
         {{ form.hidden_tag() }}
         {{ form.username(placeholder="Enter username", size=64) }}{{ form.submit(class ="submit") }}
     </form>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul style="color: red;">{{ messages[0] }}</ul>
+    {% endif %}
+    {% endwith %}
 {% endblock %}

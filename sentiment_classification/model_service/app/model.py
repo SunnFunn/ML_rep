@@ -1,49 +1,32 @@
 import torch
+from torch import Tensor
 import torch.nn as nn
 import torch.utils.data
-import torch.nn.functional as F
 
-from torch.utils.data import Dataset, DataLoader
-
-import json
 import numpy as np
-
-from argparse import Namespace
+import math
+import json
 
 
 class Vocabulary(object):
     """Class to process text and extract vocabulary for mapping"""
 
     def __init__(self, token_to_idx=None):
-        """
-        Args:
-            token_to_idx (dict): a pre-existing map of tokens to indices
-        """
-
         if token_to_idx is None:
             token_to_idx = {}
         self._token_to_idx = token_to_idx
 
-        self._idx_to_token = {idx: token 
+        self._idx_to_token = {idx: token
                               for token, idx in self._token_to_idx.items()}
-        
+
     def to_serializable(self):
-        """ returns a dictionary that can be serialized """
         return {'token_to_idx': self._token_to_idx}
 
     @classmethod
     def from_serializable(cls, contents):
-        """ instantiates the Vocabulary from a serialized dictionary """
         return cls(**contents)
 
     def add_token(self, token):
-        """Update mapping dicts based on the token.
-
-        Args:
-            token (str): the item to add into the Vocabulary
-        Returns:
-            index (int): the integer corresponding to the token
-        """
         if token in self._token_to_idx:
             index = self._token_to_idx[token]
         else:
@@ -51,37 +34,14 @@ class Vocabulary(object):
             self._token_to_idx[token] = index
             self._idx_to_token[index] = token
         return index
-            
+
     def add_many(self, tokens):
-        """Add a list of tokens into the Vocabulary
-        
-        Args:
-            tokens (list): a list of string tokens
-        Returns:
-            indices (list): a list of indices corresponding to the tokens
-        """
         return [self.add_token(token) for token in tokens]
 
     def lookup_token(self, token):
-        """Retrieve the index associated with the token 
-        
-        Args:
-            token (str): the token to look up 
-        Returns:
-            index (int): the index corresponding to the token
-        """
         return self._token_to_idx[token]
 
     def lookup_index(self, index):
-        """Return the token associated with the index
-        
-        Args: 
-            index (int): the index to look up
-        Returns:
-            token (str): the token corresponding to the index
-        Raises:
-            KeyError: if the index is not in the Vocabulary
-        """
         if index not in self._idx_to_token:
             raise KeyError("the index (%d) is not in the Vocabulary" % index)
         return self._idx_to_token[index]
@@ -91,6 +51,7 @@ class Vocabulary(object):
 
     def __len__(self):
         return len(self._token_to_idx)
+
 
 class SequenceVocabulary(Vocabulary):
     def __init__(self, token_to_idx=None, unk_token="<UNK>",
@@ -118,333 +79,170 @@ class SequenceVocabulary(Vocabulary):
         return contents
 
     def lookup_token(self, token):
-        """Retrieve the index associated with the token 
-          or the UNK index if token isn't present.
-        
-        Args:
-            token (str): the token to look up 
-        Returns:
-            index (int): the index corresponding to the token
-        Notes:
-            `unk_index` needs to be >=0 (having been added into the Vocabulary) 
-              for the UNK functionality 
-        """
         if self.unk_index >= 0:
             return self._token_to_idx.get(token, self.unk_index)
         else:
             return self._token_to_idx[token]
 
-class NewsVectorizer(object):
-    """ The Vectorizer which coordinates the Vocabularies and puts them to use"""    
-    def __init__(self, title_vocab, category_vocab):
-        self.title_vocab = title_vocab
+
+class NMTVectorizer(object):
+    """ The Vectorizer which coordinates the Vocabularies and puts them to use"""
+
+    def __init__(self, vocab, category_vocab, max_text_length):
+
+        self.vocab = vocab
         self.category_vocab = category_vocab
+        self.max_text_length = max_text_length
 
-    def vectorize(self, title, vector_length=-1):
-        """
-        Args:
-            title (str): the string of words separated by a space
-            vector_length (int): an argument for forcing the length of index vector
-        Returns:
-            the vetorized title (numpy.array)
-        """
-        indices = [self.title_vocab.begin_seq_index]
-        indices.extend(self.title_vocab.lookup_token(token) 
-                       for token in title.split(" "))
-        indices.append(self.title_vocab.end_seq_index)
-
+    def _vectorize(self, indices, vector_length=-1, mask_index=0):
         if vector_length < 0:
             vector_length = len(indices)
 
-        out_vector = np.zeros(vector_length, dtype=np.int64)
-        out_vector[:len(indices)] = indices
-        out_vector[len(indices):] = self.title_vocab.mask_index
+        vector = np.zeros(vector_length, dtype=np.int64)
+        vector[:len(indices)] = indices
+        vector[len(indices):] = mask_index
 
-        return out_vector
+        return vector
 
-    @classmethod
-    def from_dataframe(cls, news_df, cutoff=25):
-        """Instantiate the vectorizer from the dataset dataframe
-        
-        Args:
-            news_df (pandas.DataFrame): the target dataset
-            cutoff (int): frequency threshold for including in Vocabulary 
-        Returns:
-            an instance of the NewsVectorizer
-        """
-        category_vocab = Vocabulary()        
-        for category in sorted(set(news_df.emos)):
-            category_vocab.add_token(category)
+    def _get_source_indices(self, text):
+        indices = []
+        indices.extend(self.vocab.lookup_token(token) for token in text.split(" "))
+        return indices
 
-        word_counts = Counter()
-        for text in news_df.text:
-            for token in text.split(" "):
-                if token not in string.punctuation:
-                    word_counts[token] += 1
-        
-        title_vocab = SequenceVocabulary()
-        for word, word_count in word_counts.items():
-            if word_count >= cutoff:
-                title_vocab.add_token(word)
-        
-        return cls(title_vocab, category_vocab)
+    def vectorize(self, text, use_dataset_max_lengths=True):
+
+        source_vector_length = -1
+
+        if use_dataset_max_lengths:
+            source_vector_length = self.max_text_length
+
+        source_indices = self._get_source_indices(text)
+        source_vector = self._vectorize(source_indices,
+                                        vector_length=source_vector_length,
+                                        mask_index=self.vocab.mask_index)
+
+        return {"source_vector": source_vector,
+                "source_length": len(source_indices)}
+
 
     @classmethod
     def from_serializable(cls, contents):
-        title_vocab = \
-            SequenceVocabulary.from_serializable(contents['title_vocab'])
-        category_vocab =  \
-            Vocabulary.from_serializable(contents['category_vocab'])
+        vocab = SequenceVocabulary.from_serializable(contents["vocab"])
+        category_vocab = Vocabulary.from_serializable(contents['category_vocab'])
 
-        return cls(title_vocab=title_vocab, category_vocab=category_vocab)
+        return cls(vocab=vocab, category_vocab=category_vocab,
+                   max_text_length=contents["max_text_length"])
 
-    def to_serializable(self):
-        return {'title_vocab': self.title_vocab.to_serializable(),
-                'category_vocab': self.category_vocab.to_serializable()}
 
-class NewsDataset(Dataset):
-    def __init__(self, news_df, vectorizer):
-        """
-        Args:
-            news_df (pandas.DataFrame): the dataset
-            vectorizer (NewsVectorizer): vectorizer instatiated from dataset
-        """
-        self.news_df = news_df
-        self._vectorizer = vectorizer
+def load_vectorizer(vectorizer_filepath):
+    with open(vectorizer_filepath) as fp:
+        return NMTVectorizer.from_serializable(json.load(fp))
 
-        # +1 if only using begin_seq, +2 if using both begin and end seq tokens
-        measure_len = lambda context: len(context.split(" "))
-        self._max_seq_length = max(map(measure_len, news_df.text)) + 2
-        
 
-        self.train_df = self.news_df[self.news_df.split=='train']
-        self.train_size = len(self.train_df)
+class PositionalEncoding(nn.Module):
 
-        self.val_df = self.news_df[self.news_df.split=='val']
-        self.validation_size = len(self.val_df)
+    def __init__(self, d_model: int, dropout: float = 0.25, max_length: int = 17):
+        super().__init__()
 
-        self.test_df = self.news_df[self.news_df.split=='test']
-        self.test_size = len(self.test_df)
+        self.dropout = nn.Dropout(p=dropout)
 
-        self._lookup_dict = {'train': (self.train_df, self.train_size),
-                             'val': (self.val_df, self.validation_size),
-                             'test': (self.test_df, self.test_size)}
+        position = torch.arange(max_length).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
+        pe = torch.zeros(max_length, 1, d_model)
+        pe[:, 0, 0::2] = torch.sin(position * div_term)
+        pe[:, 0, 1::2] = torch.cos(position * div_term)
+        self.register_buffer('pe', pe)
 
-        self.set_split('train')
+    def forward(self, x: Tensor) -> Tensor:
+        x = x + self.pe[:x.size(0)]
+        return self.dropout(x)
 
-        # Class weights
-        class_counts = news_df.emos.value_counts().to_dict()
-        def sort_key(item):
-            return self._vectorizer.category_vocab.lookup_token(item[0])
-        sorted_counts = sorted(class_counts.items(), key=sort_key)
-        frequencies = [count for _, count in sorted_counts]
-        self.class_weights = 1.0 / torch.tensor(frequencies, dtype=torch.float32)
-        
-        
-    @classmethod
-    def load_dataset_and_make_vectorizer(cls, news_csv):
-        """Load dataset and make a new vectorizer from scratch
-        
-        Args:
-            surname_csv (str): location of the dataset
-        Returns:
-            an instance of SurnameDataset
-        """
-        news_df = pd.read_csv(news_csv)
-        train_news_df = news_df[news_df.split=='train']
-        return cls(news_df, NewsVectorizer.from_dataframe(train_news_df))
 
-    @classmethod
-    def load_dataset_and_load_vectorizer(cls, news_csv, vectorizer_filepath):
-        """Load dataset and the corresponding vectorizer. 
-        Used in the case in the vectorizer has been cached for re-use
-        
-        Args:
-            surname_csv (str): location of the dataset
-            vectorizer_filepath (str): location of the saved vectorizer
-        Returns:
-            an instance of SurnameDataset
-        """
-        news_df = pd.read_csv(news_csv)
-        vectorizer = cls.load_vectorizer_only(vectorizer_filepath)
-        return cls(news_csv, vectorizer)
+def create_mask(src, padding_idx=0):
+    batch_size = src.size(0)
+    src_seq_len = src.size(1)
 
-    @staticmethod
-    def load_vectorizer_only(vectorizer_filepath):
-        """a static method for loading the vectorizer from file
-        
-        Args:
-            vectorizer_filepath (str): the location of the serialized vectorizer
-        Returns:
-            an instance of SurnameVectorizer
-        """
-        with open(vectorizer_filepath) as fp:
-            return NewsVectorizer.from_serializable(json.load(fp))
+    src_mask = torch.zeros((src_seq_len, src_seq_len), device='cpu').expand(batch_size, -1, -1).type(torch.bool)
+    src_mask = torch.cat([src_mask, src_mask, src_mask,
+                          src_mask, src_mask, src_mask], dim=0)
 
-    def save_vectorizer(self, vectorizer_filepath):
-        """saves the vectorizer to disk using json
-        
-        Args:
-            vectorizer_filepath (str): the location to save the vectorizer
-        """
-        with open(vectorizer_filepath, "w") as fp:
-            json.dump(self._vectorizer.to_serializable(), fp)
+    src_padding_mask = (src == padding_idx)
+    return src_mask, src_padding_mask
 
-    def get_vectorizer(self):
-        """ returns the vectorizer """
-        return self._vectorizer
 
-    def set_split(self, split="train"):
-        """ selects the splits in the dataset using a column in the dataframe """
-        self._target_split = split
-        self._target_df, self._target_size = self._lookup_dict[split]
+class NMTDecoder(nn.Module):
+    def __init__(self, num_embeddings, embedding_size,
+                 max_len_target,
+                 pretrained_embeddings=None):
 
-    def __len__(self):
-        return self._target_size
+        super(NMTDecoder, self).__init__()
 
-    def __getitem__(self, index):
-        """the primary entry point method for PyTorch datasets
-        
-        Args:
-            index (int): the index to the data point 
-        Returns:
-            a dictionary holding the data point's features (x_data) and label (y_target)
-        """
-        row = self._target_df.iloc[index]
+        self.max_len_target = max_len_target
+        self.embedding_size = embedding_size
 
-        title_vector = \
-            self._vectorizer.vectorize(row.text, self._max_seq_length)
-
-        category_index = \
-            self._vectorizer.category_vocab.lookup_token(row.emos)
-
-        return {'x_data': title_vector,
-                'y_target': category_index}
-
-    def get_num_batches(self, batch_size):
-        """Given a batch size, return the number of batches in the dataset
-        
-        Args:
-            batch_size (int)
-        Returns:
-            number of batches in the dataset
-        """
-        return len(self) // batch_size
-
-def generate_batches(dataset, batch_size, shuffle=True,
-                     drop_last=True, device="cpu"): 
-    """
-    A generator function which wraps the PyTorch DataLoader. It will 
-      ensure each tensor is on the write device location.
-    """
-    dataloader = DataLoader(dataset=dataset, batch_size=batch_size,
-                            shuffle=shuffle, drop_last=drop_last)
-
-    for data_dict in dataloader:
-        out_data_dict = {}
-        for name, tensor in data_dict.items():
-            out_data_dict[name] = data_dict[name].to(device)
-        yield out_data_dict
-
-class NewsClassifier(nn.Module):
-    def __init__(self, embedding_size, num_embeddings, num_channels, 
-                 hidden_dim, num_classes, dropout_p, 
-                 pretrained_embeddings=None, padding_idx=0):
-        """
-        Args:
-            embedding_size (int): size of the embedding vectors
-            num_embeddings (int): number of embedding vectors
-            filter_width (int): width of the convolutional kernels
-            num_channels (int): number of convolutional kernels per layer
-            hidden_dim (int): the size of the hidden dimension
-            num_classes (int): the number of classes in classification
-            dropout_p (float): a dropout parameter 
-            pretrained_embeddings (numpy.array): previously trained word embeddings
-                default is None. If provided, 
-            padding_idx (int): an index representing a null position
-        """
-        super(NewsClassifier, self).__init__()
+        self.pe = PositionalEncoding(d_model=embedding_size, max_length=max_len_target)
 
         if pretrained_embeddings is None:
+            self.target_embedding = nn.Embedding(num_embeddings, embedding_size, padding_idx=0)
 
-            self.emb = nn.Embedding(embedding_dim=embedding_size,
-                                    num_embeddings=num_embeddings,
-                                    padding_idx=padding_idx)        
         else:
-            pretrained_embeddings = torch.from_numpy(pretrained_embeddings).float()
-            self.emb = nn.Embedding(embedding_dim=embedding_size,
-                                    num_embeddings=num_embeddings,
-                                    padding_idx=padding_idx,
-                                    _weight=pretrained_embeddings)
-        
-            
-        self.convnet = nn.Sequential(
-            nn.Conv1d(in_channels=embedding_size, 
-                   out_channels=num_channels, kernel_size=3),
-            nn.ELU(),
-            nn.Conv1d(in_channels=num_channels, out_channels=num_channels, 
-                   kernel_size=3, stride=2),
-            nn.ELU(),
-            nn.Conv1d(in_channels=num_channels, out_channels=num_channels, 
-                   kernel_size=3, stride=2),
-            nn.ELU(),
-            nn.Conv1d(in_channels=num_channels, out_channels=num_channels, 
-                   kernel_size=3),
-            nn.ELU()
-        )
+            self.target_embedding = nn.Embedding(num_embeddings, embedding_size, padding_idx=0,
+                                                 _weight=pretrained_embeddings)
 
-        self._dropout_p = dropout_p
-        self.fc1 = nn.Linear(num_channels, hidden_dim)
-        self.fc2 = nn.Linear(hidden_dim, num_classes)
+        self.multihead_attn = nn.MultiheadAttention(embedding_size, num_heads=6, dropout=0.35)
+        self.ff = nn.Sequential(
+            nn.Linear(embedding_size, 4 * embedding_size),
+            nn.ReLU(),
+            nn.Dropout(0.35),
+            nn.Linear(4 * embedding_size, embedding_size))
+        self.norm = nn.BatchNorm1d(max_len_target)
+        self.classifier = nn.Sequential(nn.Linear(embedding_size, 6), nn.ReLU(), nn.Dropout(0.35))
 
-    def forward(self, x_in, apply_softmax=False):
-        """The forward pass of the classifier
-        
-        Args:
-            x_in (torch.Tensor): an input data tensor. 
-                x_in.shape should be (batch, dataset._max_seq_length)
-            apply_softmax (bool): a flag for the softmax activation
-                should be false if used with the Cross Entropy losses
-        Returns:
-            the resulting tensor. tensor.shape should be (batch, num_classes)
-        """
-        
-        # embed and permute so features are channels
-        x_embedded = self.emb(x_in).permute(0, 2, 1)
+    def forward(self, x_source, src_padding_mask, src_mask):
 
-        features = self.convnet(x_embedded)
+        # создаем вложения слов и их позиций(эмбеддинги)
+        embedded = self.target_embedding(x_source).permute(1, 0, 2)
+        pe_embedded = self.pe.forward(embedded)
+        attn_in = pe_embedded
 
-        # average and remove the extra dimension
-        remaining_size = features.size(dim=2)
-        features = F.avg_pool1d(features, remaining_size).squeeze(dim=2)
-        features = F.dropout(features, p=self._dropout_p)
-        
-        # mlp classifier
-        intermediate_vector = F.relu(F.dropout(self.fc1(features), p=self._dropout_p))
-        prediction_vector = self.fc2(intermediate_vector)
+        # блок расчета самовнимания
+        x = self.multihead_attn(attn_in, attn_in, attn_in,
+                                key_padding_mask=src_padding_mask,
+                                attn_mask=src_mask)[0].permute(1, 0, 2)
+        attn_out_norm = self.norm(x + attn_in.permute(1, 0, 2))
+        x = self.ff(attn_out_norm)
+        x = self.norm(x + attn_out_norm)
 
-        if apply_softmax:
-            prediction_vector = F.softmax(prediction_vector, dim=1)
+        # блок классификации
+        scores = self.classifier(x)
+        scores = torch.sum(scores, dim=1) / self.max_len_target
 
-        return prediction_vector
+        return scores
 
-args = Namespace(
-    # Data and Path hyper parameters
-    embedding_size=100, 
-    hidden_dim=100, 
-    num_channels=100, 
-    # Training hyper parameter
-    seed=1337, 
-    learning_rate=0.001, 
-    dropout_p=0.1
-)
 
-vectorizer = NewsDataset.load_vectorizer_only('./app/model/vectorizer.json')
+class NMTModel(nn.Module):
+    """ The Neural Machine Translation Model """
 
-classifier = NewsClassifier(embedding_size=args.embedding_size, 
-                            num_embeddings=len(vectorizer.title_vocab),
-                            num_channels=args.num_channels,
-                            hidden_dim=args.hidden_dim, 
-                            num_classes=len(vectorizer.category_vocab), 
-                            dropout_p=args.dropout_p,
-                            padding_idx=0)
+    def __init__(self, target_vocab_size, target_embedding_size,
+                 max_length, pretrained_embeddings=None):
+        super(NMTModel, self).__init__()
+
+        self.decoder = NMTDecoder(num_embeddings=target_vocab_size,
+                                  embedding_size=target_embedding_size,
+                                  max_len_target=max_length,
+                                  pretrained_embeddings=pretrained_embeddings)
+
+    def forward(self, x_source, src_padding_mask, src_mask):
+        decoded_states = self.decoder(x_source,
+                                      src_padding_mask=src_padding_mask,
+                                      src_mask=src_mask)
+
+        return decoded_states
+
+
+vectorizer = load_vectorizer('./app/model/vectorizer.json')
+
+classifier = NMTModel(target_vocab_size=len(vectorizer.vocab),
+                      target_embedding_size=300,
+                      max_length=vectorizer.max_text_length,
+                      pretrained_embeddings=None)

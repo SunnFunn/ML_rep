@@ -67,7 +67,7 @@ def run_client(host: str,
 
 
 if __name__ == "__main__":
-    Tin = 17.5
+    Tin = 19.6
     while True:
         try:
             Tin_next = run_client(host='127.0.0.1',

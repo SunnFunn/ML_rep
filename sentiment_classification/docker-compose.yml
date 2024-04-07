@@ -9,18 +9,35 @@ services:
             - 5672:5672
             - 15672:15672
 
-  flask:
-        image: sunnfunn1970/sentiment:flask
-        command: python3 sentiment.py
-        restart: always
-        ports:
-            - 80:5000
-        depends_on:
-              - rabbitmq
-              - model
-  model:
-        image: sunnfunn1970/sentiment:model
-        command: python3 worker.py
+  sentiments_app:
+        image: sentiments_app:sentiments_app
+        container_name: sentiments_app
         restart: always
         depends_on:
               - rabbitmq
+              - worker1
+              - worker2
+        expose:
+            - 5000
+  worker1:
+        image: worker_app:worker_app
+        container_name: worker1_app
+        restart: always
+        depends_on:
+              - rabbitmq
+
+  worker2:
+        image: worker_app:worker_app
+        container_name: worker2_app
+        restart: always
+        depends_on:
+              - rabbitmq
+
+  sentiments_web:
+       image: sentiments_web:sentiments_web
+       container_name: sentiments_web
+       restart: always
+       ports:
+          - 80:80
+       depends_on:
+          - sentiments_app

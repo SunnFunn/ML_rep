@@ -18,32 +18,32 @@ classifier.to('cpu')
 @app.route('/home')
 @login_required
 def home():
-	return render_template('home.html', title = 'Home page')
+    return render_template('home.html', title = 'Home page')
 
 @app.route('/input', methods=['GET', 'POST'])
 @login_required
 def input_to_predict():
-	
-	form = InputForm()		
-	if form.validate_on_submit():
-		
-		input_text = form.input_text.data
-		temperature = float(form.temperature.data)
-		samples_number = int(form.samples_number.data)
-		predicted_surnames = []
-		
-		for _ in range(samples_number):
-			indexes = inference(input_text, temperature)
-			surname = decode_samples(indexes, vectorizer)[0]
-			if surname not in predicted_surnames:
-				predicted_surnames.append(surname)
-		
-		surnames_info = Surnames(surname_beginning = input_text, surnames_generated=' '.join(predicted_surnames), author=current_user)
-		db.session.add(surnames_info)
-		db.session.commit()
-		
-		return render_template('predictions.html', title = 'Sentiment analisys', predicted_surnames=predicted_surnames)
-	return render_template('input.html', title = 'Sentiment analisys', form=form)
+
+    form = InputForm()
+    if form.validate_on_submit():
+
+        input_text = form.input_text.data
+        temperature = float(form.temperature.data)
+        samples_number = int(form.samples_number.data)
+        predicted_surnames = []
+
+        for _ in range(samples_number):
+            indexes = inference(input_text, temperature)
+            surname = decode_samples(indexes, vectorizer)[0]
+            if surname not in predicted_surnames:
+                predicted_surnames.append(surname)
+
+        surnames_info = Surnames(surname_beginning = input_text, surnames_generated=' '.join(predicted_surnames), author=current_user)
+        db.session.add(surnames_info)
+        db.session.commit()
+
+        return render_template('predictions.html', title = 'Sentiment analisys', predicted_surnames=predicted_surnames)
+    return render_template('input.html', title = 'Sentiment analisys', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -83,13 +83,13 @@ def register():
 @app.route('/analytics', methods=['GET', 'POST'])
 @login_required
 def analytics():
-	form = DataForm()
-	if form.validate_on_submit():
-		input_username = form.username.data
-		user = db.session.scalar(sa.select(User).where(User.username == input_username))
-		if user is None or user.username != current_user.username:
-			flash('Unknown username entered or data for you does not exist yet!')
-			return redirect(url_for('analytics'))
-		surnames = db.session.scalars(user.surnames.select()).all()
-		return render_template('output.html', title = 'Some analytics', surnames=surnames[-5:], user=input_username)
-	return render_template('analytics.html', title = 'Some analytics', form=form)
+    form = DataForm()
+    if form.validate_on_submit():
+        input_username = form.username.data
+        user = db.session.scalar(sa.select(User).where(User.username == input_username))
+        if user is None or user.username != current_user.username:
+            flash('Unknown username entered or data for you does not exist yet!')
+            return redirect(url_for('analytics'))
+        surnames = db.session.scalars(user.surnames.select()).all()
+        return render_template('output.html', title = 'Some analytics', surnames=surnames[-5:], user=input_username)
+    return render_template('analytics.html', title = 'Some analytics', form=form)

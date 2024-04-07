@@ -53,7 +53,6 @@ async def read_and_write_registers(context):
             byte_list.extend(int.to_bytes(reg, 2, "little"))
         Tin = round(struct.unpack("f", byte_list)[0], 1)
         state_current_and_action = job(url_msk, Tin)
-        #action = state_current_and_action[-1]
 
         #обновляем модель, если опыта достаточно (больше размера батча, по дефолту 64 эпизодов опыта)
         experience_dataframe = pd.read_csv('./data/experience_RL.csv')
