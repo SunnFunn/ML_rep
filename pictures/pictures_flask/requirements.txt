@@ -1,0 +1,21 @@
+numpy == 1.25.1
+Pillow == 10.1.0
+scikit-image == 0.22.0
+
+flask == 2.3.3
+flask-wtf == 1.1.1
+wtforms == 3.0.1
+sqlalchemy == 2.0.23
+flask_sqlalchemy == 3.1.1
+flask_migrate == 4.0.5
+flask_login == 0.6.3
+werkzeug == 2.3.7
+Bootstrap-Flask == 2.3.3
+email-validator == 2.1.0.post1
+
+PyMuPDF == 1.23.6
+
+uWSGI == 2.0.23
+
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch == 2.0.1+cpu

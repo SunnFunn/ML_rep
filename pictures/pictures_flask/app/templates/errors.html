@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block errors %}
+	{% if e.code == 413 %}
+    	<h3 id="text" class="display-8 text-center" style="color: red;">{{ error_message_413 }}</h3><hr>
+	{% elif e.code == 404 %}
+    	<h3 id="text" class="display-8 text-center" style="color: red;">{{ error_message_404 }}</h3><hr>
+	{% elif e.code == 500 %}
+    	<h3 id="text" class="display-8 text-center" style="color: red;">{{ error_message_500 }}</h3><hr>
+	{% elif error_message_400 %}
+    	<h3 id="text" class="display-8 text-center" style="color: red;">{{ error_message_400 }}</h3><hr>
+	{% endif %}
+
+	<div class="fixed-bottom pb-5 ps-2">
+    	<div><a href="{{ url_for('home') }}" align="left">Вернуться на главную страницу.</a></div>
+  	</div>
+{% endblock %}

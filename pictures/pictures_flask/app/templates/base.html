@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		{% block head %}
+        	<meta charset="utf-8">
+			<script type=text/javascript src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}"></script>
+        	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<title>
+			{{ title }}
+		</title>
+		<link rel="shortcut icon" href="{{ url_for('static', filename='columns-gap.svg') }}"/>
+		{% endblock %}
+        	
+		{% block styles %}
+            	{{ bootstrap.load_css() }}
+		{% endblock %}
+	</head>
+
+	<body>
+		{% from 'bootstrap5/nav.html' import render_nav_item %}
+		{% block navbar %}
+		<nav class="navbar navbar-expand-lg fs-7 mt-2 mb-5 pb-0 pt-0" style="background-color: #F5F5F5;">
+		<a class="navbar-brand" mb-0 h1>
+			<img src="{{ url_for('static', filename='gross_eng.png') }}" alt="Bootstrap" width="120" height="60">
+			Сравниваем документы
+		</a>
+			<div class="navbar-nav ms-auto">
+				{{ render_nav_item('home', 'Главная') }}
+				{% if current_user.is_anonymous %}
+					{{ render_nav_item('login', 'Авторизация') }}
+				{% else %}
+					{{ render_nav_item('logout', 'Выход') }}
+				{% endif %}
+				{{ render_nav_item('settings', 'Настройки') }}
+			</div>
+    		</nav>
+		{% endblock %}
+
+		{% block home %}{% endblock %}
+		{% block login %}{% endblock %}
+		{% block register %}{% endblock %}
+		{% block settings %}{% endblock %}
+		{% block errors %}{% endblock %}
+	</body>
+	<footer class="bg-light text-left text-lg-start fixed-bottom">
+            © GR Engineering
+       </footer>
+</html>

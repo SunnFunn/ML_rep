@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block settings %}
+	<form action="" method="post" class="ms-5" >
+		{{ form.hidden_tag() }}
+
+		{{ form.select_thresh.label }}
+		<div class="">
+			<span class="" id="slider-thresh-span" style="margin-left: 10%;"></span>
+		</div>
+		{{ form.select_thresh(type="range", class="styled-slider slider-progress mt-3 mb-3", min="0", max="1", step=0.01,
+								  id="thresh", style="width: 97.2%;") }}<br/>
+
+		{{ form.select_dpi.label }}
+		<div class="">
+			<span class="" id="slider-dpi-span" style="margin-left: 10%;"></span>
+		</div>
+		{{ form.select_dpi(type="range", class="styled-slider slider-progress mt-3 mb-3", min="100", max="300", step=10,
+								  id="dpi", style="width: 97.2%;") }}<br/>
+
+		<div class="row">
+			<div class="col">
+				{{ form.select_kernel_w.label }}
+				{{ form.select_kernel_w( class="form-control mt-3 mb-3", placeholder=data[5][0],
+										min="5", max="100", step=1, style="width: 320px;",id="kernel_w") }}
+			</div>
+			<div class="col">
+				{{ form.select_kernel_h.label }}
+				{{ form.select_kernel_h( class="form-control mt-3 mb-3", placeholder=data[5][1],
+										min="1", max="10", step=1, style="width: 320px;", id="kernel_h") }}
+			</div>
+			<div class="col">
+				{{ form.select_iterations.label }}
+				{{ form.select_iterations( class="form-control mt-3 mb-3", placeholder=data[6],
+										min="1", max="10", style="width: 320px;", id="kernel_h") }}
+			</div>
+		</div>
+
+		{{ form.select_blend.label }}
+		<div class="">
+			<span class="" id="slider-blend-span" style="margin-left: 10%;"></span>
+		</div>
+		{{ form.select_blend(type="range", class="styled-slider slider-progress mt-3 mb-3", min="0", max="1", step=0.1,
+								  id="blend", style="width: 97.2%;") }}<br/>
+
+		{{ form.select_filter.label }}
+		{{ form.select_filter(class="form-select form-select-md mt-3", style="width: 285px", id="filters") }}
+		<p></p>
+		{{ form.submit(class = 'btn btn-outline-danger mt-3', id='submit') }}
+		<script>
+			var slider = $('#thresh').val()
+			slider = parseFloat(slider).toFixed(2)
+			var attrValue = parseFloat(slider)*100/1.04
+			$('#slider-thresh-span').attr("style", "margin-left:" + attrValue + "%;")
+  			$('#slider-thresh-span').html(slider)
+
+			$('#thresh').on("input", function(){
+				var slider = $(this).val()
+				slider = parseFloat(slider).toFixed(2)
+				var attrValue = parseFloat(slider)*100/1.04
+				$('#slider-thresh-span').attr("style", "margin-left:" + attrValue + "%;")
+  				$('#slider-thresh-span').html(slider)
+			});
+		</script>
+		<script>
+			var slider = $('#dpi').val()
+			slider = parseInt(slider).toFixed(0)
+			var attrValue = (parseInt(slider) - 100)/2.08
+			$('#slider-dpi-span').attr("style", "margin-left:" + attrValue + "%;")
+  			$('#slider-dpi-span').html(slider)
+
+			$('#dpi').on("input", function(){
+				var slider = $(this).val()
+				slider = parseFloat(slider).toFixed(0)
+				var attrValue = (parseFloat(slider) - 100)/2.08
+				$('#slider-dpi-span').attr("style", "margin-left:" + attrValue + "%;")
+  				$('#slider-dpi-span').html(slider)
+			});
+		</script>
+		<script>
+			var slider = $('#blend').val()
+			slider = parseFloat(slider).toFixed(1)
+			var attrValue = parseFloat(slider)*100/1.04
+			$('#slider-blend-span').attr("style", "margin-left:" + attrValue + "%;")
+  			$('#slider-blend-span').html(slider)
+
+			$('#blend').on("input", function(){
+				var slider = $(this).val()
+				slider = parseFloat(slider).toFixed(1)
+				var attrValue = parseFloat(slider)*100/1.04
+				$('#slider-blend-span').attr("style", "margin-left:" + attrValue + "%;")
+  				$('#slider-blend-span').html(slider)
+			});
+		</script>
+	</form><br/>
+{% endblock %}

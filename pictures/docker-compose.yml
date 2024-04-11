@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  -------:
+        image: --------:---------
+        volumes:
+          - outputs_exchange:/app/app/static
+        container_name: ---------
+        restart: always
+        expose:
+            - 5000
+  cleaner:
+        image: cleaner:cleaner
+        volumes:
+          - outputs_exchange:/app/app/static
+        container_name: cleaner
+        restart: always
+
+  proxy:
+       image: proxy:proxy
+       container_name: proxy
+       restart: always
+       ports:
+          - 80:80
+       depends_on:
+          - pic_app
+volumes:
+   outputs_exchange:

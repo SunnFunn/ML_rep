@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block login %}
+  <h3 id="text" class="display-8 text-center">Войдите под своим именем или зарегистрируйтесь</h3><hr>
+  <form name="login" action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="row row-cols-2 mx-auto mt-3" style="width: 700px;">
+      <div class="col" style="width: 170px;">{{ form.username.label }}</div>
+      <div class="col">
+        {{ form.username(class="input-group-text", placeholder="Введите ваше имя", style="width: 525px;") }}
+        {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="row row-cols-2 mx-auto mt-3" style="width: 700px;">
+      <div class="col" style="width: 170px;">{{ form.password.label }}</div>
+      <div class="col">
+        {{ form.password(class="input-group-text", placeholder="Введите ваш пароль", style="width: 525px;") }}
+        {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="container mt-5" style="width: 700px;">
+      {{ form.submit(class = 'btn btn-outline-danger') }}
+      {{ form.remember_me(class="form-check-input ms-3 mt-3", type="checkbox") }}  {{ form.remember_me.label }}
+    </div>
+  </form>
+
+  <div class="fixed-bottom pb-5 ps-2">
+    <div>Новый пользователь?   <a href="{{ url_for('register') }}" align="left">Зарегистрируйтесь!</a></div>
+  </div>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <ul class="list-group text-center mt-3" id= "message" style="color: red; font: 18px Tahoma;">{{ message }}</ul>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+{% endblock %}
