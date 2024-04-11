@@ -46,6 +46,9 @@ def get_temperatures_forecast(url):
     # из этой же таблицы вытаскиваем текущую облачность
     cloudiness_info = table_content.find('div', {'class': 'cc_0'}).find('div')['onmouseover']
     # из строки оставляем только цифры и берем только первые две цифры
-    cloudiness = float(re.sub('[^0-9]', '', cloudiness_info)[:2]) / 100
+    try:
+        cloudiness = float(re.sub('[^0-9]', '', cloudiness_info)[:2])/100
+    except:
+        cloudiness = 0.0
 
     return temperature_current, temperature_next, wind, humidity, cloudiness
