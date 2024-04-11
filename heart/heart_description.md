@@ -6,7 +6,7 @@
 > - Интерфейс работы с моделью выполнен с применением модуля streamlit;
 > - Приложение контейнеризовано в Docker и развернуто в облачной виртуальной машине с возможностью публичного доступа через web-сервер nginx;
 
-![Heart_interface](https://github.com/SunnFunn/ML_rep/blob/master/imgs/heart_1.png)
+![Heart_interface_1](https://github.com/SunnFunn/ML_rep/blob/master/imgs/heart_1.png)
 
 
-
+![Heart_interface_2](https://github.com/SunnFunn/ML_rep/blob/master/imgs/heart_2.png)
