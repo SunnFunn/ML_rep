@@ -4,13 +4,13 @@
 
 Интерфейсы регистрации пользователя, ввода текста и получения оценки эмоциональной окраски представлены ниже на трех скриншотах.
 
-![Heart_interface_1](https://github.com/SunnFunn/ML_rep/blob/master/imgs/sentiments_1.png)
+![sentiments_1](https://github.com/SunnFunn/ML_rep/blob/master/imgs/sentiments_1.png)
 
 
-![Heart_interface_2](https://github.com/SunnFunn/ML_rep/blob/master/imgs/sentiments_2.png)
+![sentiments_2](https://github.com/SunnFunn/ML_rep/blob/master/imgs/sentiments_2.png)
 
 
-![Heart_interface_2](https://github.com/SunnFunn/ML_rep/blob/master/imgs/sentiments_3.png)
+![sentiments_3](https://github.com/SunnFunn/ML_rep/blob/master/imgs/sentiments_3.png)
 
 Приложение развернуто на VM AWS в четырех докер контейнерах (в случае одного worker, для каждого дополнительного worker создается новый контейнер): web-контейнер, контейнер flask-приложения с uWSGI сервером, контейнер брокера сообщений rabbitmq и worker-контейнер (выполняет основную работу инференса трансформера-классификатора по поступившему запросу) с запуском контейнеров через конфигурацию в docker-compose.yml.
 Контейнер flask-приложения создается с новым пользователем внутри контейнера и с передачей прав собственника всех файлов (рекурсивно) данному пользователю (в целях ухода от root собственника).
