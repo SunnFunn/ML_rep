@@ -1,0 +1,13 @@
+numpy == 1.25.1
+
+flask == 2.3.3
+flask-wtf == 1.1.1
+wtforms == 3.0.1
+werkzeug == 2.3.7
+Bootstrap-Flask == 2.3.3
+
+langchain == 0.1.20
+faiss-gpu == 1.7.2
+faiss-cpu == 1.8.0
+
+uWSGI == 2.0.23

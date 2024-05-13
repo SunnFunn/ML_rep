@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% from 'bootstrap5/form.html' import render_field %}
+
+{% block home %}
+	<h2 id="text" class="display-7 text-center">Looking for best dating app? Ask AI, enter your query below!</h2><hr>
+		<form action="" method="post" class="ms-5" >
+		{{ form.hidden_tag() }}
+		<div class="container">
+			<div class="row justify-content-md-center">
+				<div class="col">
+					{{ form.query( class="form-control", style="width: 900px;",id="query") }}
+				</div>
+				<div class="col">
+					{{ form.submit(class = 'btn btn-outline-danger mt-3', id='submit') }}
+				</div>
+			</div>
+		</div>
+		</form>
+{% endblock %}

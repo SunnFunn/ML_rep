@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  chat:
+        image: chat:chat
+        volumes:
+          - ollama_volume:/app/app
+        container_name: chat
+        restart: always
+        expose:
+            - 5000
+
+  proxy_chat:
+       image: proxy_chat:proxy_chat
+       container_name: proxy_chat
+       ports:
+          - "80:80"
+       depends_on:
+          - chat
+
+  ollama:
+      image: ollama/ollama:latest
+      ports:
+        - "11434:11434"
+      volumes:
+        - ollama_volume:/root/.ollama
+      #deploy:
+      #  resources:
+      #    reservations:
+      #      devices:
+      #        - driver: nvidia
+      #          count: all
+      #          capabilities: [gpu]
+volumes:
+  ollama_volume:

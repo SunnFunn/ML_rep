@@ -5,4 +5,5 @@
 *.pt
 *.zip
 *.log
+*.faiss
 **/.idea/
