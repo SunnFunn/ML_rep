@@ -6,7 +6,13 @@ from langchain_community.embeddings import OllamaEmbeddings
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
 
-llm = Ollama(model="llama3")
+import torch
+
+#llm = Ollama(model="llama3")
+llm = Ollama(model="gemma")
+#llm.generation_config.cache_implementation = "static"
+#compiled_llm = torch.compile(llm, mode="reduce-overhead", fullgraph=True)
+
 output_parser = StrOutputParser()
 embeddings = OllamaEmbeddings(model='nomic-embed-text')
 
