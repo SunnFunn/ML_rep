@@ -6,4 +6,6 @@
 *.zip
 *.log
 *.faiss
+*.txt
+*.pdf
 **/.idea/
