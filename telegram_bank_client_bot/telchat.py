@@ -33,7 +33,7 @@ async def clear(update, context):
 
 
 if __name__ == '__main__':
-    TOKEN = '7276676231:AAHv02klOIGltDEUOg9X8wO6RC99kdsnofQ'
+    TOKEN = '.........................'
     application = ApplicationBuilder().token(TOKEN).build()
 
     start_handler = CommandHandler('start', start)
