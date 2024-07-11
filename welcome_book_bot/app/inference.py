@@ -41,8 +41,3 @@ def response(text):
     output = chain.invoke({"input": text, "context": context})
 
     return output
-
-
-#if __name__ == '__main__':
-#    text = 'Какие столовые  есть в комбинате питания ПАО «НЕФАЗ»?'
-#    print(response(text))
