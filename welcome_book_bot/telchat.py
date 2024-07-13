@@ -27,7 +27,7 @@ async def query(update, context):
 
 
 if __name__ == '__main__':
-    TOKEN = '..................................................'
+    TOKEN = '.............................................'
     application = ApplicationBuilder().token(TOKEN).build()
 
     start_handler = CommandHandler('start', start)

@@ -1,6 +1,6 @@
 import faiss
 import numpy as np
-import json
+import pickle
 
 from app import Data
 from app.embedding import embed
@@ -13,8 +13,10 @@ import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 
-with open('./app/context_source/wb.json', 'r', encoding='utf-8') as file:
-    wb = json.load(file)
+with open('./app/context_source/wb.pkl', 'rb') as file:
+    docs = pickle.load(file)
+with open('./app/context_source/wb_chunks.pkl', 'rb') as file:
+    chunks = pickle.load(file)
 
 
 index = faiss.read_index('./app/faiss_index/flat_wb.index')
@@ -35,9 +37,19 @@ def response(text):
     query[0] = embed(text).detach().numpy()
     faiss.normalize_L2(query)
 
-    dists, idxs = index.search(query, Data.k_neighbors)
+    _, idxs = index.search(query, Data.k_neighbors)
 
-    context = wb[str(idxs[0][0])]
+    context = ''
+    pages = []
+    keys_list = [k for k, v in chunks.items()]
+    for idx in idxs[0]:
+        page_number = docs[idx].metadata['page']
+        if page_number not in keys_list:
+            page_number = list(filter(lambda x: x < page_number, keys_list))[-1]
+        if page_number not in pages:
+            pages.append(page_number)
+            context += chunks[page_number]
+
     output = chain.invoke({"input": text, "context": context})
 
     return output

@@ -9,4 +9,6 @@
 *.txt
 *.pdf
 *.json
+*.pkl
+*.index
 **/.idea/

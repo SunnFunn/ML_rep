@@ -1,41 +1,25 @@
-import fitz
-import re
-import json
-from collections import defaultdict
-import codecs
+from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+import pickle
 
-doc = fitz.open('./context_source/wb.pdf')
-page_counts = doc.page_count
 
-text = []
-for page in range(4, page_counts - 1):
-    for b in doc[page].get_text('blocks'):
-        cleaned_text = re.sub(r"[^0-9а-яА-Я., \-\№]", '', b[4]).strip()
-        cleaned_text.encode('utf-8').decode('utf-8')
-        text.append(cleaned_text)
+loader = PyMuPDFLoader(file_path="context_source/wb.pdf")
+docs = loader.load()
 
-text_no_spaces = []
-for block in text:
-    if not (not block or block.isspace()):
-        text_no_spaces.append(block)
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=200,
+    chunk_overlap=0,
+    length_function=len,
+)
+documents = text_splitter.split_documents(docs[6:-1])
 
-headers = []
-for block in text_no_spaces:
-    if block.isupper():
-        headers.append(block)
+max_len = 0
+for doc in documents:
+    if max_len < len(doc.page_content.split(' ')):
+        max_len = len(doc.page_content.split(' '))
 
-headers_idxs = [i for i, v in enumerate(text_no_spaces) if v.isupper()]
-wb_chunks = [" ".join(text_no_spaces[i:j]) for i, j in zip(headers_idxs[:-1], headers_idxs[1:])]
-
-wb_dict = defaultdict(list)
-for idx, chunk in enumerate(wb_chunks):
-    wb_dict[idx] = chunk
 
 if __name__ == '__main__':
-    with open('./context_source/wb.json', 'w', encoding='cp1251') as json_file:
-        json.dump(wb_dict, json_file, ensure_ascii=False)
-
-    with codecs.open('./context_source/wb.json', 'r', encoding='cp1251') as f:
-        content = f.read()
-    with codecs.open('./context_source/wb.json', 'w', encoding='utf-8') as f:
-        f.write(content)
+    print(max_len)
+    with open('./context_source/wb.pkl', 'wb') as file:
+        pickle.dump(documents, file, protocol=pickle.HIGHEST_PROTOCOL)
