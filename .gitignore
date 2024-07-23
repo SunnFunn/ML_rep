@@ -11,4 +11,5 @@
 *.json
 *.pkl
 *.index
+*.jpg
 **/.idea/
