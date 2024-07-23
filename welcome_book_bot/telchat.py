@@ -113,7 +113,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 
 if __name__ == '__main__':
-    TOKEN = '7357273495:AAG4tXi5Y2IEY-z9Dr1_8q4k8wi7A92TVoE'
+    TOKEN = '........................................'
     application = ApplicationBuilder().token(TOKEN).build()
     bot = Bot(TOKEN)
 
